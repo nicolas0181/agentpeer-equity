@@ -105,13 +105,13 @@ td .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right
 textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;font-size:.8rem;padding:6px;margin-top:8px}
 .ctl .btn{margin-top:8px}
 
-.lang{display:inline-block;font-size:.85rem;font-weight:600;color:var(--ceo);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;margin-bottom:6px}
+.langsw{display:inline-flex;margin-bottom:8px}.langsw button{flex:0 0 auto;padding:4px 14px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <a class="lang" href="./" lang="fr" hreflang="fr">Version française</a>
+  <div class="seg langsw" role="group" aria-label="Language"><button data-lang="fr" data-href="./" lang="fr" aria-pressed="false">FR</button><button data-lang="en" data-href="en.html" lang="en" aria-pressed="true">EN</button></div>
   <h1>AgentPeer: who owns what, and who gets what</h1>
   <p>From pre-seed to Series C: step through the rounds to watch the cap table move, then see what each founder would actually take home in an acquisition, after preferences and tax. Defaults calibrated on Carta, PitchBook and Cooley 2025-2026 data for AI infrastructure.</p>
 </header>
@@ -527,7 +527,7 @@ function wire(){
   on("reset","click",()=>{S=defaultParams();S.frictions=calibrate(S.sector);UI.ref="P50";UI.stage=null;buildRounds();update();});
   on("copyCode","click",async()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify({S,UI:{cur:UI.cur,fx:UI.fx,ref:UI.ref}}))));
     try{await navigator.clipboard.writeText(code);setTxt("codeMsg","Code copied.");}catch(e){$("codeIn").value=code;$("codeIn").select();setTxt("codeMsg","Automatic copy blocked: the code is selected in the field, copy it.");}});
-  on("loadCode","click",()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob($("codeIn").value.trim()))));
+  on("loadCode","click",()=>{try{const o=toLocal(JSON.parse(decodeURIComponent(escape(atob($("codeIn").value.trim())))));
     const d=defaultParams(o.S.sector,o.S.region);S=Object.assign(d,o.S);S.frictions=calibrate(S.sector);Object.assign(UI,o.UI||{});UI.stage=null;buildRounds();update();setTxt("codeMsg","Scenario loaded.");}
     catch(e){setTxt("codeMsg","This code is not valid. Check that it was copied in full.");}});
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",update);
@@ -653,6 +653,11 @@ function renderSrc(){const rows=[["Median post-money and dilution by round","Car
 function renderTab(){({cap:renderCap,val:renderVal,exit:renderExit,sc:renderSc,mc:renderMc,src:renderSrc})[UI.tab]();}
 function update(){syncControls();P_PATHS=paths(S);renderHero();renderTab();}
 
+const LANG="en";const LMAP=[["IA appli / infra agentique", "AI app / agentic infra"], ["Moyenne marché (IA + non-IA)", "Market average (AI + non-AI)"], ["Logiciel non-IA", "Non-AI software"], ["US (référence Carta)", "US (Carta baseline)"], ["Historique observé (Carta)", "Observed history (Carta)"], ["Marché 2026 (parcours propre)", "2026 market (clean path)"], ["Pricée", "Priced"], ["Aucune", "None"], ["Aucun", "No one"], ["Pré-seed", "Pre-seed"], ["Série A", "Series A"], ["Série B", "Series B"], ["Série C", "Series C"], ["Série D", "Series D"], ["Futur founder (CMO)", "Future founder (CMO)"]];
+function toLocal(o){const m=new Map(LMAP.map(p=>LANG==="fr"?[p[1],p[0]]:[p[0],p[1]]));const f=x=>{if(typeof x==="string")return m.has(x)?m.get(x):x;if(Array.isArray(x))return x.map(f);if(x&&typeof x==="object"){const r={};for(const k in x)r[m.has(k)?m.get(k):k]=f(x[k]);return r;}return x;};return f(o);}
+function encState(){return btoa(unescape(encodeURIComponent(JSON.stringify({S,UI:{cur:UI.cur,fx:UI.fx,ref:UI.ref}}))));}
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.lang===LANG)return;location.href=b.dataset.href+"#s="+encState();}));
+if(location.hash.startsWith("#s=")){try{const o=toLocal(JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(3))))));S=Object.assign(defaultParams(o.S.sector,o.S.region),o.S);S.frictions=calibrate(S.sector);Object.assign(UI,o.UI||{});UI.stage=null;}catch(e){}history.replaceState(null,"",location.pathname+location.search);}
 if(window.innerWidth<980)$("mktDetails").open=false;
 buildControls();wire();update();
 if(!hasPlotly())document.querySelectorAll(".chart").forEach(c=>c.innerHTML='<p class="note">Charts could not load. Tables stay up to date.</p>');
