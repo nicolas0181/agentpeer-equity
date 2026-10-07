@@ -106,6 +106,20 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 .ctl .btn{margin-top:8px}
 
 .langsw{display:inline-flex;margin-bottom:8px}.langsw button{flex:0 0 auto;padding:4px 14px;font-weight:600}
+
+.gl{text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,var(--ceo) 60%,transparent);cursor:help;border-radius:3px;transition:background .15s}
+.gl:hover,.gl[aria-expanded=true]{background:color-mix(in srgb,var(--ceo) 12%,transparent)}
+.gl:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.glpop{position:fixed;z-index:60;width:max-content;max-width:min(320px,calc(100vw - 24px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(10,20,30,.18);padding:11px 13px 12px;font-size:.84rem;line-height:1.45;text-align:left;white-space:normal;animation:glin .14s ease-out}
+.glpop[hidden]{display:none}
+@keyframes glin{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.glpop{animation:none}.gl{transition:none}}
+.glt{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.gld{margin:0 0 7px}
+.glw{margin:0;padding-top:7px;border-top:1px solid var(--line);color:var(--muted)}
+.glk{display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cto);margin-bottom:1px}
+.glm{display:inline-block;margin-top:8px;padding:0;border:0;background:none;font:inherit;font-weight:600;color:var(--ceo);text-decoration:none;cursor:pointer}
+.glm:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -663,5 +677,150 @@ buildControls();wire();update();
 if(!hasPlotly())document.querySelectorAll(".chart").forEach(c=>c.innerHTML='<p class="note">Charts could not load. Tables stay up to date.</p>');
 </script>
 
+<script>
+// ============================================================ glossaire / glossary
+(function(){
+const LG=(typeof LANG!=="undefined"?LANG:"fr");
+const L={
+fr:{why:"Pour nous",more:"En savoir plus",close:"Fermer"},
+en:{why:"For us",more:"Learn more",close:"Close"}}[LG];
+const CARTA_SAFE="https://carta.com/data/safe-valuation-caps-q2-2026/";
+const CARTA_POOL="https://carta.com/data/newsletter-employee-option-pool-size/";
+const CARTA_OWN="https://carta.com/data/founder-ownership-2026/";
+const COOLEY="https://www.cooley.com/news/insight/2026/2026-08-17-q2-2026-venture-financing-report";
+const PFU_URL="https://www.abcbourse.com/marches/le-pfu-va-passer-de-30-a-31-4-pour-de-nombreux-actionnaires-francais-en-2026_683361";
+const G={
+fr:[
+{k:["SAFE","SAFEs"],t:"SAFE",d:"Contrat : l'investisseur verse l'argent maintenant et reçoit des actions au prochain tour pricé, à un prix plafonné par le cap.",w:"Votre pré-seed se fera très probablement en SAFE ou en BSA AIR. Sa part est connue dès la signature : montant ÷ cap.",m:{url:CARTA_SAFE,l:"Données Carta sur les SAFE"}},
+{k:["BSA AIR"],t:"BSA AIR",d:"L'équivalent français du SAFE : un bon qui se transforme en actions à la prochaine levée.",w:"C'est ce qu'on vous proposera si vous levez auprès d'angels ou de fonds français. Le simulateur le traite comme un SAFE."},
+{k:["cap table"],t:"Cap table",d:"Le tableau de qui détient quel pourcentage de la société.",w:"C'est ce que tout le simulateur fait évoluer, tour après tour.",m:{tab:"cap",l:"Voir l'onglet Évolution"}},
+{k:["cap","caps"],t:"Cap (plafond de valorisation)",d:"Valorisation maximale à laquelle un SAFE se convertit. Si le tour suivant est plus cher, l'investisseur garde ce prix plafond.",w:"Votre vrai levier au pré-seed : 1,5 M levés sur un cap de 15 M, c'est 10 % cédés ; sur un cap de 10 M, c'est 15 %.",m:{url:CARTA_SAFE,l:"Caps médians (Carta)"}},
+{k:["post-money"],t:"Post-money",d:"Valorisation de la société juste après l'arrivée de l'argent frais (pré-money + montant levé).",w:"La part d'un investisseur, c'est montant ÷ post-money. C'est aussi la base de la valeur papier."},
+{k:["pré-money","pre-money"],t:"Pré-money",d:"Valorisation de la société avant l'argent frais.",w:"Si le pool est rechargé en pré-money, seuls vous et les actionnaires déjà présents payez cette dilution, pas le nouvel investisseur."},
+{k:["dilution"],t:"Dilution",d:"Baisse de votre pourcentage quand de nouvelles actions sont émises (levée, pool…).",w:"Vous ne perdez pas d'argent : votre part rétrécit, mais la boîte vaut plus. Le simulateur montre où partent les points."},
+{k:["pool salariés","pool","BSPCE"],t:"Pool salariés (BSPCE)",d:"Réserve d'actions destinée aux salariés. En France, on attribue des BSPCE.",w:"Après les levées, c'est la plus grosse source de dilution : en Série C, le pool médian (16,8 %) dépasse la part des founders (16,1 %).",m:{url:CARTA_POOL,l:"Taille du pool par tour (Carta)"}},
+{k:["bridge","bridges"],t:"Bridge",d:"Petite levée de transition, souvent en SAFE, pour tenir jusqu'au tour suivant.",w:"Le délai entre seed et Série A dépasse souvent la trésorerie. Un bridge est probable, et il dilue un peu plus."},
+{k:["extension","extensions"],t:"Extension",d:"Rallonge d'un tour (A+, B+…) au même prix, avec de nouveaux investisseurs.",w:"C'est fréquent en pratique, et ça explique une partie de l'écart entre le parcours propre et l'historique Carta."},
+{k:["discount"],t:"Discount",d:"Réduction sur le prix du tour suivant accordée au porteur du SAFE (par exemple 20 %).",w:"La plupart des SAFE n'en ont pas aujourd'hui (cap seul). Si on vous en demande un, vous cédez un peu plus."},
+{k:["tour pricé","tours pricés","pricée","pricé"],t:"Tour pricé",d:"Levée où l'on fixe un prix par action et une valorisation, avec actions de préférence et pacte d'actionnaires.",w:"Plus long et plus cher en avocats qu'un SAFE, mais tout est clair. C'est la norme à partir du seed ou de la Série A."},
+{k:["fully diluted"],t:"Fully diluted",d:"Calcul des parts comme si tous les bons et options étaient déjà des actions.",w:"C'est la mesure que regardent les VC : vos pourcentages se comptent sur cette base."},
+{k:["as-converted"],t:"As-converted",d:"Les SAFE pas encore convertis sont comptés comme s'ils l'étaient (montant ÷ cap).",w:"La dilution du SAFE est visible dès maintenant, au lieu de vous surprendre au seed."},
+{k:["vesting"],t:"Vesting",d:"Les actions d'un founder s'acquièrent progressivement, souvent sur 4 ans.",w:"Protège les deux autres si l'un de vous part tôt : il ne garde que ce qu'il a déjà acquis."},
+{k:["cliff"],t:"Cliff",d:"Période minimale, souvent 1 an, avant d'acquérir quoi que ce soit.",w:"Un cofondateur qui part avant 12 mois repart sans actions. Les VC s'y attendent."},
+{k:["good leaver","bad leaver","leaver"],t:"Good / bad leaver",d:"Clause du pacte qui fixe ce que garde un founder qui part : sa part acquise (good) ou presque rien (bad, par exemple en cas de faute).",w:"À négocier entre vous dès maintenant : en cas de départ, ça compte plus que quelques points de répartition."},
+{k:["préférence de liquidation","préférences de liquidation","préférences","préférence"],t:"Préférence de liquidation",d:"En cas de vente, les investisseurs récupèrent d'abord leur mise (1x) avant que le reste soit partagé.",w:"Si AgentPeer est rachetée pour moins que les montants levés, les founders peuvent ne presque rien toucher.",m:{tab:"exit",l:"Voir l'onglet Sortie"}},
+{k:["non participatif","non participative","non participatifs","participative","participatives","participatif"],t:"Participative ou non",d:"Non participative : l'investisseur prend soit sa mise, soit sa part du prix. Participative : il prend sa mise, puis aussi sa part du reste.",w:"Environ 96 % des tours sont non participatifs. Si on vous propose du participatif, c'est un point à négocier.",m:{url:COOLEY,l:"Termes des tours (Cooley)"}},
+{k:["pari passu"],t:"Pari passu",d:"Toutes les préférences ont le même rang et sont remboursées au prorata.",w:"Le cas standard. Ça ne change pas votre part, seulement l'ordre de remboursement entre investisseurs."},
+{k:["empilé","empilées","empilés"],t:"Empilé (stacked)",d:"Les derniers investisseurs entrés sont remboursés en premier lors d'une vente.",w:"Plutôt vu dans les tours difficiles. Pour vous, l'effet est faible ; c'est surtout entre investisseurs."},
+{k:["PFU"],t:"PFU (flat tax)",d:"Prélèvement forfaitaire unique sur les plus-values : 31,4 % en 2026 (12,8 % d'impôt + 18,6 % de prélèvements sociaux).",w:"C'est ce qui sépare le brut du net dans l'onglet Sortie. Certains montages (apport-cession…) changent la donne : voyez un fiscaliste.",m:{url:PFU_URL,l:"PFU 2026"}},
+{k:["CEHR"],t:"CEHR",d:"Contribution exceptionnelle sur les hauts revenus : 3 à 4 % au-delà de 250 000 € de revenu (500 000 € pour un couple).",w:"S'ajoute au PFU l'année d'une grosse vente."},
+{k:["centile","centiles","P10","P25","P50","P75","P90"],t:"Centiles (P10…P90)",d:"P50 = médiane : la moitié des boîtes font mieux. P90 : seules 10 % font mieux. P10 : 90 % font mieux.",w:"Regardez la fourchette, pas seulement la médiane : en IA, au seed, le P90 vaut près de 4× la médiane.",m:{tab:"val",l:"Voir l'onglet Valeur papier"}},
+{k:["médiane","médianes","médian","médians"],t:"Médiane",d:"Valeur du milieu : la moitié des cas est au-dessus, l'autre moitié en dessous.",w:"Plus parlante qu'une moyenne, qui est tirée vers le haut par quelques licornes."},
+{k:["Monte Carlo"],t:"Monte Carlo",d:"Des milliers de trajectoires tirées au hasard (levées, rachats, échecs) pour voir toute la distribution des résultats.",w:"Ça montre la réalité : le plus souvent les founders ne touchent rien, et quelques cas rapportent énormément.",m:{tab:"mc",l:"Voir l'onglet Monte Carlo"}},
+{k:["valeur papier","papier"],t:"Valeur papier",d:"Votre part × la valorisation du dernier tour. Ce n'est pas de l'argent que vous pouvez toucher.",w:"Utile pour comparer des scénarios, pas pour estimer votre patrimoine.",m:{tab:"exit",l:"Ce que vous toucheriez vraiment"}},
+{k:["espérance nette","espérance"],t:"Espérance",d:"Moyenne de tous les résultats possibles, échecs compris.",w:"Elle est tirée par quelques très grosses sorties. La médiane, elle, est presque toujours zéro."},
+{k:["historique Carta","parcours propre","propre 2026"],t:"Historique Carta / parcours propre",d:"Historique : calé sur les parts réellement observées par Carta (tours 2021-2025), bridges et extensions compris. Propre : seulement les tours principaux, aux dilutions 2026.",w:"La réalité d'AgentPeer sera probablement entre les deux.",m:{url:CARTA_OWN,l:"Founder Ownership Report 2026"}},
+{k:["σ"],t:"σ (dispersion)",d:"Mesure de l'écart des valorisations autour de la médiane.",w:"Plus σ est grand, plus l'écart entre P10 et P90 est large."},
+{k:["ρ"],t:"ρ (persistance)",d:"À quel point une boîte bien valorisée à un tour le reste au tour suivant.",w:"Élevé : les bons départs restent bons. Valeur par défaut : 0,7."}
+],
+en:[
+{k:["SAFE","SAFEs"],t:"SAFE",d:"Contract: the investor pays now and receives shares at the next priced round, at a price capped by the valuation cap.",w:"Your pre-seed will most likely be a SAFE (or a BSA AIR in France). The investor's stake is known at signing: amount ÷ cap.",m:{url:CARTA_SAFE,l:"Carta SAFE data"}},
+{k:["BSA AIR"],t:"BSA AIR",d:"The French equivalent of a SAFE: a warrant that turns into shares at the next fundraise.",w:"What you'll be offered if you raise from French angels or funds. The simulator treats it like a SAFE."},
+{k:["cap table"],t:"Cap table",d:"The table of who owns what percentage of the company.",w:"This is what the whole simulator moves, round after round.",m:{tab:"cap",l:"Open the Over time tab"}},
+{k:["cap","caps"],t:"Valuation cap",d:"The maximum valuation at which a SAFE converts. If the next round is pricier, the investor keeps the capped price.",w:"Your real lever at pre-seed: $1.5M on a $15M cap is 10% sold; on a $10M cap it's 15%.",m:{url:CARTA_SAFE,l:"Median caps (Carta)"}},
+{k:["post-money"],t:"Post-money",d:"Company valuation right after the new money comes in (pre-money + amount raised).",w:"An investor's stake = amount ÷ post-money. It's also the basis for paper value."},
+{k:["pre-money"],t:"Pre-money",d:"Company valuation before the new money.",w:"If the pool is refreshed pre-money, only you and existing shareholders pay for that dilution, not the new investor."},
+{k:["dilution"],t:"Dilution",d:"Your percentage going down when new shares are issued (fundraise, pool…).",w:"You don't lose money: your slice shrinks but the company is worth more. The simulator shows where the points go."},
+{k:["employee pool","pool","ESOP","BSPCE"],t:"Employee pool (ESOP / BSPCE)",d:"Shares set aside for employees. In France they're granted as BSPCE.",w:"After fundraising, it's the biggest source of dilution: by Series C the median pool (16.8%) exceeds the founders' stake (16.1%).",m:{url:CARTA_POOL,l:"Pool size by stage (Carta)"}},
+{k:["bridge","bridges"],t:"Bridge",d:"A small in-between raise, often on a SAFE, to last until the next round.",w:"The gap between seed and Series A often outlasts the runway. A bridge is likely, and it dilutes a bit more."},
+{k:["extension","extensions"],t:"Extension",d:"Topping up a round (A+, B+…) at the same price with new investors.",w:"Common in practice, and part of why the clean path and Carta history differ."},
+{k:["discount"],t:"Discount",d:"A reduction on the next round's price given to the SAFE holder (e.g. 20%).",w:"Most SAFEs today have none (cap only). If an investor asks for one, you give up a bit more."},
+{k:["priced round","priced rounds","priced"],t:"Priced round",d:"A raise that sets a price per share and a valuation, with preferred shares and a shareholders' agreement.",w:"Slower and more legal cost than a SAFE, but everything is explicit. Standard from seed or Series A."},
+{k:["fully diluted"],t:"Fully diluted",d:"Ownership counted as if all options and warrants were already shares.",w:"The measure VCs look at: your percentages are counted this way."},
+{k:["as-converted"],t:"As-converted",d:"Unconverted SAFEs are counted as if they had converted (amount ÷ cap).",w:"SAFE dilution shows up now instead of surprising you at seed."},
+{k:["vesting"],t:"Vesting",d:"A founder's shares are earned over time, usually 4 years.",w:"Protects the other two if one of you leaves early: they keep only what they've earned."},
+{k:["cliff"],t:"Cliff",d:"A minimum period, usually 1 year, before anything vests.",w:"A co-founder who leaves before 12 months leaves with no shares. VCs expect it."},
+{k:["good leaver","bad leaver","leaver"],t:"Good / bad leaver",d:"Shareholders' agreement clause setting what a departing founder keeps: their vested shares (good) or almost nothing (bad, e.g. misconduct).",w:"Agree on it now: if someone leaves, it matters more than a few points of split."},
+{k:["liquidation preference","liquidation preferences","preferences","preference"],t:"Liquidation preference",d:"In a sale, investors get their money back first (1x) before the rest is shared.",w:"If AgentPeer is acquired for less than the total raised, founders can get almost nothing.",m:{tab:"exit",l:"Open the Exit tab"}},
+{k:["non-participating","participating"],t:"Participating or not",d:"Non-participating: the investor takes either their money back or their share of the price. Participating: they take their money back, then their share of the rest too.",w:"About 96% of rounds are non-participating. If you're offered participating, push back.",m:{url:COOLEY,l:"Deal terms (Cooley)"}},
+{k:["pari passu"],t:"Pari passu",d:"All preferences rank equally and are repaid pro rata.",w:"The standard case. It doesn't change your stake, only the repayment order among investors."},
+{k:["stacked"],t:"Stacked",d:"The latest investors are repaid first in a sale.",w:"Seen more in tough rounds. Small effect for you; it's mostly between investors."},
+{k:["PFU","flat tax"],t:"PFU (French flat tax)",d:"Flat tax on capital gains in France: 31.4% in 2026 (12.8% income tax + 18.6% social charges).",w:"It's what separates gross from net in the Exit tab. Some structures (holding rollover…) change this: ask a tax advisor.",m:{url:PFU_URL,l:"PFU 2026 (in French)"}},
+{k:["CEHR","surtax"],t:"CEHR (high-income surtax)",d:"French surtax of 3-4% above €250k of income (€500k for a couple).",w:"Adds to the flat tax in the year of a big sale."},
+{k:["percentile","percentiles","P10","P25","P50","P75","P90"],t:"Percentiles (P10…P90)",d:"P50 = median: half of companies do better. P90: only 10% do better. P10: 90% do better.",w:"Look at the range, not just the median: in AI, the seed P90 is nearly 4× the median.",m:{tab:"val",l:"Open the Paper value tab"}},
+{k:["median","medians"],t:"Median",d:"The middle value: half the cases are above, half below.",w:"More telling than an average, which a few unicorns pull up."},
+{k:["Monte Carlo"],t:"Monte Carlo",d:"Thousands of random paths (raises, acquisitions, failures) to see the full spread of outcomes.",w:"It shows reality: most of the time founders get nothing, and a few cases pay off hugely.",m:{tab:"mc",l:"Open the Monte Carlo tab"}},
+{k:["paper value","paper"],t:"Paper value",d:"Your stake × the last round's valuation. Not money you can actually take.",w:"Useful to compare scenarios, not to estimate your wealth.",m:{tab:"exit",l:"What you'd actually get"}},
+{k:["expected net","expected"],t:"Expected value",d:"The average of all possible outcomes, failures included.",w:"Driven by a few very large exits. The median is almost always zero."},
+{k:["Carta history","clean path","clean 2026","observed history"],t:"Carta history / clean path",d:"History: calibrated on the ownership Carta actually observed (2021-2025 rounds), bridges and extensions included. Clean: main rounds only, at 2026 dilution.",w:"AgentPeer's reality will probably land in between.",m:{url:CARTA_OWN,l:"Founder Ownership Report 2026"}},
+{k:["σ"],t:"σ (spread)",d:"How widely valuations spread around the median.",w:"The bigger σ, the wider the gap between P10 and P90."},
+{k:["ρ"],t:"ρ (persistence)",d:"How much a company valued high at one round stays high at the next.",w:"High: good starts stay good. Default 0.7."}
+]}[LG];
+
+const idx=new Map();G.forEach((e,i)=>e.k.forEach(k=>idx.set(k.toLowerCase(),i)));
+const alts=[...idx.keys()].sort((a,b)=>b.length-a.length).map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
+const RE=new RegExp("(?<![\\p{L}\\p{N}])("+alts.join("|")+")(?![\\p{L}\\p{N}])","giu");
+const SKIP="button,option,select,textarea,input,a,svg,script,style,td,summary,.gl,.glpop,.seg-b,.js-plotly-plot,.kpi .n,.ticks";
+const ZONES="header,aside details,.split,.card,.panel>p,.panel>h3,.panel>ul,.panel>.tbl";
+
+function scan(){
+  document.querySelectorAll(ZONES).forEach(z=>{
+    if(z.parentElement&&z.parentElement.closest(ZONES))return; // outermost zone only
+    const done=new Set([...z.querySelectorAll(".gl")].map(e=>e.dataset.g));
+    const w=document.createTreeWalker(z,NodeFilter.SHOW_TEXT,{acceptNode:n=>{
+      if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      return n.parentElement&&n.parentElement.closest(SKIP)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}});
+    const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+    nodes.forEach(n=>{
+      const s=n.nodeValue;RE.lastIndex=0;let m,last=0,frag=null;
+      while((m=RE.exec(s))){const i=idx.get(m[1].toLowerCase());if(done.has(String(i)))continue;done.add(String(i));
+        frag=frag||document.createDocumentFragment();frag.append(s.slice(last,m.index));
+        const sp=document.createElement("span");sp.className="gl";sp.dataset.g=i;sp.tabIndex=0;sp.setAttribute("role","button");
+        sp.setAttribute("aria-haspopup","dialog");sp.setAttribute("aria-expanded","false");sp.textContent=m[1];frag.append(sp);last=m.index+m[1].length;}
+      if(frag){frag.append(s.slice(last));n.replaceWith(frag);}
+    });
+  });
+}
+
+const pop=document.createElement("div");pop.className="glpop";pop.id="glpop";pop.setAttribute("role","dialog");pop.hidden=true;
+document.body.append(pop);
+let cur=null,tOpen=null,tClose=null;
+function show(el){
+  clearTimeout(tClose);if(cur===el&&!pop.hidden)return;if(cur)cur.setAttribute("aria-expanded","false");
+  const e=G[+el.dataset.g];cur=el;el.setAttribute("aria-expanded","true");
+  pop.innerHTML=`<div class="glt">${e.t}</div><p class="gld">${e.d}</p><p class="glw"><span class="glk">${L.why}</span>${e.w}</p>`+
+    (e.m?(e.m.url?`<a class="glm" href="${e.m.url}" target="_blank" rel="noopener">${e.m.l} ↗</a>`:`<button type="button" class="glm" data-tab="${e.m.tab}">${e.m.l} →</button>`):"");
+  pop.setAttribute("aria-label",e.t);pop.hidden=false;place(el);
+  const b=pop.querySelector("button.glm");if(b)b.onclick=()=>{hide();const t=document.querySelector(`nav.tabs button[data-tab="${b.dataset.tab}"]`);if(t){t.click();t.scrollIntoView({behavior:"smooth",block:"start"});}};
+}
+function place(el){
+  const r=el.getBoundingClientRect(),vw=document.documentElement.clientWidth,vh=window.innerHeight;
+  pop.style.left="0px";pop.style.top="0px";const pw=pop.offsetWidth,ph=pop.offsetHeight;
+  let x=Math.min(Math.max(12,r.left+r.width/2-pw/2),vw-pw-12),y=r.bottom+8;
+  if(y+ph>vh-8&&r.top-ph-8>8)y=r.top-ph-8;
+  pop.style.left=x+"px";pop.style.top=y+"px";
+}
+function hide(){clearTimeout(tOpen);pop.hidden=true;if(cur){cur.setAttribute("aria-expanded","false");cur=null;}}
+const fine=window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+document.addEventListener("mouseover",ev=>{if(!fine)return;const el=ev.target.closest&&ev.target.closest(".gl");
+  if(el){clearTimeout(tClose);clearTimeout(tOpen);tOpen=setTimeout(()=>show(el),180);}
+  else if(ev.target.closest&&ev.target.closest(".glpop"))clearTimeout(tClose);});
+document.addEventListener("mouseout",ev=>{if(!fine)return;const to=ev.relatedTarget;
+  if(ev.target.closest&&(ev.target.closest(".gl")||ev.target.closest(".glpop"))&&!(to&&to.closest&&(to.closest(".glpop")||to.closest(".gl")===cur))){
+    clearTimeout(tOpen);tClose=setTimeout(hide,220);}});
+document.addEventListener("click",ev=>{const el=ev.target.closest(".gl");
+  if(el){ev.preventDefault();ev.stopPropagation();if(cur===el&&!pop.hidden)hide();else show(el);return;}
+  if(!ev.target.closest(".glpop"))hide();},true);
+document.addEventListener("keydown",ev=>{
+  if(ev.key==="Escape"&&!pop.hidden){const c=cur;hide();if(c)c.focus();}
+  const el=ev.target.closest&&ev.target.closest(".gl");
+  if(el&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();if(cur===el&&!pop.hidden)hide();else show(el);}});
+window.addEventListener("scroll",()=>{if(!pop.hidden&&cur)place(cur);},{passive:true,capture:true});
+window.addEventListener("resize",hide);
+
+let t=null;const mo=new MutationObserver(ms=>{if(ms.every(m=>pop.contains(m.target)))return;clearTimeout(t);t=setTimeout(scan,60);});
+scan();mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+})();
+</script>
 </body>
 </html>
