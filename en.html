@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AgentPeer — simulateur d'equity</title>
+<title>AgentPeer — equity simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -111,111 +111,111 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 <body>
 <div class="wrap">
 <header>
-  <a class="lang" href="en.html" lang="en" hreflang="en">English version</a>
-  <h1>AgentPeer : qui détient quoi, et qui touche quoi</h1>
-  <p>Du pré-seed à la Série C : faites défiler les tours pour voir la cap table bouger, puis regardez ce que chaque founder toucherait vraiment en cas de rachat, préférences et impôt compris. Valeurs calées sur Carta, PitchBook et Cooley 2025-2026 pour une infra IA.</p>
+  <a class="lang" href="./" lang="fr" hreflang="fr">Version française</a>
+  <h1>AgentPeer: who owns what, and who gets what</h1>
+  <p>From pre-seed to Series C: step through the rounds to watch the cap table move, then see what each founder would actually take home in an acquisition, after preferences and tax. Defaults calibrated on Carta, PitchBook and Cooley 2025-2026 data for AI infrastructure.</p>
 </header>
 
 <div class="grid">
 <aside id="controls">
   <details open>
-    <summary>Répartition de départ</summary>
+    <summary>Starting split</summary>
     <div class="ctl" id="founderCtl"></div>
   </details>
   <details open id="mktDetails">
-    <summary>Marché et parcours</summary>
+    <summary>Market and path</summary>
     <div class="ctl">
-      <div class="row"><label>Secteur</label><select id="sector"></select></div>
-      <div class="row"><label>Marché de levée</label><select id="region"></select></div>
-      <div class="row"><label>Parcours de dilution</label><div class="seg" data-seg="path_mode"><button data-v="Historique observé (Carta)">Historique Carta</button><button data-v="Marché 2026 (parcours propre)">Propre 2026</button></div></div>
-      <p class="note">Historique : on ajoute bridges et extensions pour retrouver la part médiane des founders mesurée par Carta (tours 2021-2025). Propre : seulement les tours principaux aux dilutions 2026.</p>
-      <div class="row"><label>Dernier tour simulé</label><select id="last"></select></div>
-      <div class="row"><label>Centile de référence <b id="refv">P50</b></label><input type="range" id="ref" min="0" max="4" step="1" value="2"></div>
-      <label class="chk"><input type="checkbox" id="cond"> Tenir compte du cap pré-seed pour la suite</label>
-      <div class="row"><label>Devise</label><div class="seg" data-seg="cur"><button data-v="$">$</button><button data-v="€">€</button></div></div>
-      <div class="row" id="fxrow" hidden><label>1 $ = … € (à ajuster)</label><input type="number" id="fx" step="0.01" min="0.5" max="1.5" value="0.86"></div>
+      <div class="row"><label>Sector</label><select id="sector"></select></div>
+      <div class="row"><label>Fundraising market</label><select id="region"></select></div>
+      <div class="row"><label>Dilution path</label><div class="seg" data-seg="path_mode"><button data-v="Observed history (Carta)">Carta history</button><button data-v="2026 market (clean path)">Clean 2026</button></div></div>
+      <p class="note">History: adds the bridges and extensions needed to match the median founder ownership measured by Carta (2021-2025 rounds). Clean: only the main rounds, at 2026 dilution.</p>
+      <div class="row"><label>Last round simulated</label><select id="last"></select></div>
+      <div class="row"><label>Reference percentile <b id="refv">P50</b></label><input type="range" id="ref" min="0" max="4" step="1" value="2"></div>
+      <label class="chk"><input type="checkbox" id="cond"> Let the pre-seed cap shift later rounds</label>
+      <div class="row"><label>Currency</label><div class="seg" data-seg="cur"><button data-v="$">$</button><button data-v="€">€</button></div></div>
+      <div class="row" id="fxrow" hidden><label>1 $ = … € (adjust)</label><input type="number" id="fx" step="0.01" min="0.5" max="1.5" value="0.86"></div>
     </div>
   </details>
   <details>
-    <summary>Pré-seed (SAFE / BSA AIR)</summary>
+    <summary>Pre-seed (SAFE / BSA AIR)</summary>
     <div class="ctl">
-      <div class="row"><label>Instrument</label><div class="seg" data-seg="preseed_mode"><button data-v="SAFE">SAFE</button><button data-v="Pricée">Pricée</button><button data-v="Aucune">Aucune</button></div></div>
-      <div class="row"><label>Montant (M$)</label><input type="number" id="pa" step="0.1" min="0.1"></div>
-      <div class="row"><label>Cap / post-money (M$)</label><input type="number" id="pc" step="0.5" min="1"></div>
+      <div class="row"><label>Instrument</label><div class="seg" data-seg="preseed_mode"><button data-v="SAFE">SAFE</button><button data-v="Priced">Priced</button><button data-v="None">None</button></div></div>
+      <div class="row"><label>Amount ($M)</label><input type="number" id="pa" step="0.1" min="0.1"></div>
+      <div class="row"><label>Cap / post-money ($M)</label><input type="number" id="pc" step="0.5" min="1"></div>
       <p class="note" id="pdil"></p>
     </div>
   </details>
   <details>
     <summary>Seed, bridge, extensions</summary>
     <div class="ctl">
-      <div class="row"><label>Seed</label><div class="seg" data-seg="seed_mode"><button data-v="Pricée">Pricée</button><button data-v="SAFE">SAFE</button></div></div>
-      <label class="chk"><input type="checkbox" id="bridge_on"> Bridge SAFE entre seed et A</label>
-      <div class="row"><label>Bridge, en % du seed levé <b id="bfv"></b></label><input type="range" id="bridge_frac" min="10" max="100" step="5"></div>
-      <div class="row"><label>Cap du bridge, × post seed <b id="bcv"></b></label><input type="range" id="bridge_cap" min="1" max="3" step="0.1"></div>
-      <div class="row"><label>Discount des SAFE <b id="dv"></b></label><input type="range" id="disc" min="0" max="25" step="5"></div>
-      <label class="chk"><input type="checkbox" id="ext_on"> Extensions A+ / B+ / C+ en plus</label>
-      <div class="row"><label>Dilution par extension <b id="ev"></b></label><input type="range" id="ext_dil" min="2" max="12" step="1"></div>
+      <div class="row"><label>Seed</label><div class="seg" data-seg="seed_mode"><button data-v="Priced">Priced</button><button data-v="SAFE">SAFE</button></div></div>
+      <label class="chk"><input type="checkbox" id="bridge_on"> Bridge SAFE between seed and A</label>
+      <div class="row"><label>Bridge, % of seed raised <b id="bfv"></b></label><input type="range" id="bridge_frac" min="10" max="100" step="5"></div>
+      <div class="row"><label>Bridge cap, × seed post-money <b id="bcv"></b></label><input type="range" id="bridge_cap" min="1" max="3" step="0.1"></div>
+      <div class="row"><label>SAFE discount <b id="dv"></b></label><input type="range" id="disc" min="0" max="25" step="5"></div>
+      <label class="chk"><input type="checkbox" id="ext_on"> Add A+ / B+ / C+ extensions</label>
+      <div class="row"><label>Dilution per extension <b id="ev"></b></label><input type="range" id="ext_dil" min="2" max="12" step="1"></div>
     </div>
   </details>
   <details>
-    <summary>Pool salariés</summary>
+    <summary>Employee pool</summary>
     <div class="ctl">
-      <label class="chk"><input type="checkbox" id="pool_on"> Avec pool (BSPCE / options)</label>
-      <div class="row"><label>Pool dès la création <b id="piv"></b></label><input type="range" id="pool_initial" min="0" max="15" step="1"></div>
-      <div class="row"><label>Recharge du pool</label><div class="seg" data-seg="pool_mode"><button data-v="pre">Pré-money</button><button data-v="post">Post-money</button></div></div>
+      <label class="chk"><input type="checkbox" id="pool_on"> With pool (options / BSPCE)</label>
+      <div class="row"><label>Pool at incorporation <b id="piv"></b></label><input type="range" id="pool_initial" min="0" max="15" step="1"></div>
+      <div class="row"><label>Pool refresh</label><div class="seg" data-seg="pool_mode"><button data-v="pre">Pre-money</button><button data-v="post">Post-money</button></div></div>
     </div>
   </details>
   <details>
-    <summary>Équipe : vesting et départs</summary>
+    <summary>Team: vesting and departures</summary>
     <div class="ctl">
-      <div class="row"><label>Part du futur founder</label><div class="seg" data-seg="fut_mode"><button data-v="reserve">Détenue dès aujourd'hui</button><button data-v="join">Émise à l'arrivée</button></div></div>
-      <div class="row"><label>Arrivée du futur founder <b id="fjv"></b></label><input type="range" id="fut_join" min="1" max="60" step="1"></div>
-      <div class="row"><label>Simuler le départ de</label><select id="leaver"></select></div>
-      <div class="row"><label>Départ au mois <b id="lmv"></b></label><input type="range" id="leave_month" min="1" max="96" step="1"></div>
-      <div class="row"><label>Type de départ</label><div class="seg" data-seg="leaver_type"><button data-v="good">Good leaver</button><button data-v="bad">Bad leaver</button></div></div>
+      <div class="row"><label>Future founder's stake</label><div class="seg" data-seg="fut_mode"><button data-v="reserve">Held from day one</button><button data-v="join">Issued on arrival</button></div></div>
+      <div class="row"><label>Future founder joins <b id="fjv"></b></label><input type="range" id="fut_join" min="1" max="60" step="1"></div>
+      <div class="row"><label>Simulate departure of</label><select id="leaver"></select></div>
+      <div class="row"><label>Leaves at month <b id="lmv"></b></label><input type="range" id="leave_month" min="1" max="96" step="1"></div>
+      <div class="row"><label>Departure type</label><div class="seg" data-seg="leaver_type"><button data-v="good">Good leaver</button><button data-v="bad">Bad leaver</button></div></div>
       <div class="row"><label>Vesting <b id="vmv"></b></label><input type="range" id="vest_months" min="24" max="60" step="6"></div>
       <div class="row"><label>Cliff <b id="clv"></b></label><input type="range" id="cliff" min="0" max="24" step="3"></div>
-      <div class="row"><label>Vesting déjà acquis par le CTO (MVP) <b id="ccv"></b></label><input type="range" id="cto_credit" min="0" max="24" step="3"></div>
-      <p class="note">Good leaver : garde la part vestée. Bad leaver : rachat au nominal, modélisé comme une perte totale. Les parts reprises sont annulées et profitent à tous au prorata.</p>
+      <div class="row"><label>Vesting already credited to the CTO (MVP) <b id="ccv"></b></label><input type="range" id="cto_credit" min="0" max="24" step="3"></div>
+      <p class="note">Good leaver: keeps the vested part. Bad leaver: bought back at nominal, modeled as a total loss. Shares taken back are cancelled and benefit everyone pro rata.</p>
     </div>
   </details>
   <details>
-    <summary>Sortie et fiscalité</summary>
+    <summary>Exit and tax</summary>
     <div class="ctl">
-      <div class="row"><label>Préférence de liquidation</label><div class="seg" data-seg="pref_mult"><button data-v="1">1x</button><button data-v="1.5">1,5x</button><button data-v="2">2x</button></div></div>
-      <label class="chk"><input type="checkbox" id="participating"> Participative</label>
-      <div class="row"><label>Rang des préférences</label><div class="seg" data-seg="seniority"><button data-v="pari passu">Pari passu</button><button data-v="stacked">Empilé</button></div></div>
-      <div class="row"><label>Imposition de la plus-value <b id="txv"></b></label><input type="range" id="tax" min="0" max="45" step="0.2"></div>
-      <p class="note">PFU 2026 : 31,4 %. Ajoutez la CEHR (3 à 4 %) pour les gros montants.</p>
-      <div class="row"><label>Sortie finale, × dernier post-money (estim.) <b id="tmv"></b></label><input type="range" id="term_mult" min="0.3" max="4" step="0.1"></div>
-      <div class="row"><label>Échec après le dernier tour (estim.) <b id="tfv"></b></label><input type="range" id="term_fail" min="0" max="60" step="5"></div>
+      <div class="row"><label>Liquidation preference</label><div class="seg" data-seg="pref_mult"><button data-v="1">1x</button><button data-v="1.5">1.5x</button><button data-v="2">2x</button></div></div>
+      <label class="chk"><input type="checkbox" id="participating"> Participating</label>
+      <div class="row"><label>Preference seniority</label><div class="seg" data-seg="seniority"><button data-v="pari passu">Pari passu</button><button data-v="stacked">Stacked</button></div></div>
+      <div class="row"><label>Capital gains tax <b id="txv"></b></label><input type="range" id="tax" min="0" max="45" step="0.2"></div>
+      <p class="note">French flat tax (PFU) 2026: 31.4%. Add the high-income surtax (CEHR, 3-4%) for large amounts.</p>
+      <div class="row"><label>Final exit, × last post-money (est.) <b id="tmv"></b></label><input type="range" id="term_mult" min="0.3" max="4" step="0.1"></div>
+      <div class="row"><label>Failure after last round (est.) <b id="tfv"></b></label><input type="range" id="term_fail" min="0" max="60" step="5"></div>
     </div>
   </details>
   <details>
-    <summary>Hypothèses par tour</summary>
+    <summary>Round assumptions</summary>
     <div class="ctl tbl rt" id="roundsCtl"></div>
   </details>
   <details>
-    <summary>Partager ce scénario</summary>
+    <summary>Share this scenario</summary>
     <div class="ctl">
-      <p class="note">Copiez le code et envoyez-le à vos associés ; ils le collent ici pour retrouver exactement les mêmes réglages.</p>
-      <button class="btn" id="copyCode">Copier le code du scénario</button>
-      <div class="row"><textarea id="codeIn" rows="3" placeholder="Collez un code de scénario"></textarea></div>
-      <button class="btn" id="loadCode">Charger ce code</button>
+      <p class="note">Copy the code and send it to your co-founders; they paste it here to get exactly the same settings.</p>
+      <button class="btn" id="copyCode">Copy scenario code</button>
+      <div class="row"><textarea id="codeIn" rows="3" placeholder="Paste a scenario code"></textarea></div>
+      <button class="btn" id="loadCode">Load this code</button>
       <p class="note" id="codeMsg"></p>
     </div>
   </details>
-  <button class="btn" id="reset" style="width:100%">Remettre les valeurs par défaut</button>
+  <button class="btn" id="reset" style="width:100%">Reset to defaults</button>
 </aside>
 
 <main>
-  <section class="split" aria-label="Évolution de la répartition">
+  <section class="split" aria-label="Ownership over time">
     <div class="scrub">
-      <button class="btn play" id="play" aria-label="Lancer l'animation">▶</button>
-      <input type="range" id="stageR" min="0" max="4" step="1" value="4" aria-label="Étape observée">
+      <button class="btn play" id="play" aria-label="Play animation">▶</button>
+      <input type="range" id="stageR" min="0" max="4" step="1" value="4" aria-label="Stage shown">
     </div>
     <div class="ticks" id="ticks"></div>
-    <div class="bar-label"><span>À la création</span><span>founders 100 %</span></div>
+    <div class="bar-label"><span>At incorporation</span><span>founders 100%</span></div>
     <div class="bar" id="barStart"></div>
     <div class="bar-label"><span id="endLabel"></span><span id="endPost"></span></div>
     <div class="bar" id="barEnd"></div>
@@ -224,72 +224,72 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
   </section>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" data-tab="cap" aria-selected="true">Évolution</button>
-    <button role="tab" data-tab="val">Valeur papier</button>
-    <button role="tab" data-tab="exit">Sortie</button>
-    <button role="tab" data-tab="sc">Scénarios</button>
+    <button role="tab" data-tab="cap" aria-selected="true">Over time</button>
+    <button role="tab" data-tab="val">Paper value</button>
+    <button role="tab" data-tab="exit">Exit</button>
+    <button role="tab" data-tab="sc">Scenarios</button>
     <button role="tab" data-tab="mc">Monte Carlo</button>
     <button role="tab" data-tab="src">Sources</button>
   </nav>
 
   <div class="panel on" id="p-cap">
-    <div class="card"><h3>Part de chacun, tour par tour</h3><div class="chart" id="chLines"></div>
-      <p class="note">Losanges : part médiane de l'équipe fondatrice mesurée par Carta après chaque tour.</p></div>
-    <div class="card"><h3>Cap table fully diluted, as-converted</h3><div class="chart" id="chArea"></div></div>
+    <div class="card"><h3>Each founder's stake, round by round</h3><div class="chart" id="chLines"></div>
+      <p class="note">Diamonds: median founding-team ownership measured by Carta after each round.</p></div>
+    <div class="card"><h3>Fully diluted, as-converted cap table</h3><div class="chart" id="chArea"></div></div>
     <div class="card tbl" id="capTbl"></div>
     <p class="note" id="fricNote"></p>
   </div>
 
   <div class="panel" id="p-val">
-    <div class="row" style="max-width:320px"><label>Qui ?</label><select id="who"></select></div>
-    <div class="card"><h3>Valeur papier de la part, par centile</h3><div class="chart" id="chFan"></div>
-      <p class="note">Chaque courbe suppose que la société reste au même centile. La valeur papier n'est pas ce que vous toucheriez : voir Sortie.</p></div>
+    <div class="row" style="max-width:320px"><label>Who?</label><select id="who"></select></div>
+    <div class="card"><h3>Paper value of the stake, by percentile</h3><div class="chart" id="chFan"></div>
+      <p class="note">Each curve assumes the company stays at the same percentile. Paper value is not what you would take home: see Exit.</p></div>
     <div class="card tbl" id="postTbl"></div>
   </div>
 
   <div class="panel" id="p-exit">
     <div class="card">
-      <div class="row" style="max-width:320px"><label>Rachat juste après</label><select id="exStage"></select></div>
-      <div class="row"><label>Prix de rachat, × post-money de ce tour <b id="exmv"></b></label><input type="range" id="exMult" min="0.1" max="3" step="0.05" value="1"></div>
+      <div class="row" style="max-width:320px"><label>Acquired right after</label><select id="exStage"></select></div>
+      <div class="row"><label>Acquisition price, × that round's post-money <b id="exmv"></b></label><input type="range" id="exMult" min="0.1" max="3" step="0.05" value="1"></div>
       <p id="exSummary"></p>
       <div class="tbl" id="exTbl"></div>
     </div>
-    <div class="card"><h3>Ce que touche chaque founder selon le prix de rachat</h3><div class="chart" id="chExit"></div>
-      <p class="note">Trait plein : montant réellement touché (brut). Pointillé : valeur papier. Tant que le prix reste sous les préférences cumulées, les investisseurs récupèrent leur mise avant les founders. Le pool est traité comme des actions ordinaires.</p></div>
+    <div class="card"><h3>What each founder takes home, by acquisition price</h3><div class="chart" id="chExit"></div>
+      <p class="note">Solid line: amount actually received (gross). Dotted: paper value. While the price stays below cumulative preferences, investors get their money back before founders. The pool is treated as common stock.</p></div>
   </div>
 
   <div class="panel" id="p-sc">
-    <p class="prose">Un paramètre change à la fois. « Rachat 0,5× » donne le brut du CTO et du CEO si la société est rachetée juste après le dernier tour à la moitié de son post-money : c'est là que les préférences pèsent.</p>
+    <p class="prose">One parameter changes at a time. "Acq. 0.5×" shows the CTO's and CEO's gross proceeds if the company is acquired right after the last round at half its post-money: that is where preferences bite.</p>
     <div class="card tbl" id="scTbl"></div>
-    <div class="card"><h3>Part des founders après le dernier tour</h3><div class="chart" id="chSc"></div></div>
-    <div class="card"><h3>Répartitions de départ comparées</h3><div class="tbl" id="splitTbl"></div></div>
+    <div class="card"><h3>Founder ownership after the last round</h3><div class="chart" id="chSc"></div></div>
+    <div class="card"><h3>Starting splits compared</h3><div class="tbl" id="splitTbl"></div></div>
   </div>
 
   <div class="panel" id="p-mc">
     <div class="card">
       <div class="row"><label>Simulations <b id="nv"></b></label><input type="range" id="mc_n" min="1000" max="10000" step="1000" value="3000"></div>
-      <div class="row"><label>Persistance de la qualité (ρ) <b id="rv"></b></label><input type="range" id="mc_rho" min="0" max="0.95" step="0.05" value="0.7"></div>
-      <div class="row"><label>Lien qualité ↔ levée <b id="qv"></b></label><input type="range" id="mc_ql" min="0" max="0.9" step="0.05" value="0.5"></div>
+      <div class="row"><label>Quality persistence (ρ) <b id="rv"></b></label><input type="range" id="mc_rho" min="0" max="0.95" step="0.05" value="0.7"></div>
+      <div class="row"><label>Quality ↔ fundraising link <b id="qv"></b></label><input type="range" id="mc_ql" min="0" max="0.9" step="0.05" value="0.5"></div>
     </div>
-    <div class="card"><h3>Comment ça se termine, depuis aujourd'hui</h3><div class="chart" id="chOut"></div></div>
+    <div class="card"><h3>How it ends, from today</h3><div class="chart" id="chOut"></div></div>
     <div class="card tbl" id="mcTbl"></div>
     <div class="card"><div class="row" style="max-width:320px"><label>Founder</label><select id="whoMc"></select></div>
       <h3 id="mcHistTitle"></h3><div class="chart" id="chHist"></div></div>
-    <p class="note">Chaque simulation lève tour après tour tant qu'elle passe le seuil, sinon elle est rachetée (probabilité et prix « estim. ») ou s'arrête. Au dernier tour, elle sort à un multiple aléatoire du dernier post-money ou échoue. Les montants passent par la cascade de préférences, puis l'impôt.</p>
+    <p class="note">Each simulation raises round after round while it clears the bar; otherwise it is acquired (probability and price "est.") or shuts down. At the last round, it exits at a random multiple of the last post-money, or fails. Proceeds go through the preference waterfall, then tax.</p>
   </div>
 
   <div class="panel prose" id="p-src">
-    <h3>Valeurs par défaut et statut</h3>
+    <h3>Defaults and status</h3>
     <div class="tbl" id="srcTbl"></div>
-    <h3>Valeurs par tour</h3>
+    <h3>Values by round</h3>
     <div class="tbl" id="defTbl"></div>
-    <h3>Liens</h3>
-    <p><a href="https://carta.com/data/linkedin-vc-fundraising-benchmarks-2026/" target="_blank" rel="noopener">Carta, benchmarks juillet 2026</a> · <a href="https://carta.com/data/newsletter-founder-ownership-2026/" target="_blank" rel="noopener">Carta Founder Ownership Report 2026</a> · <a href="https://carta.com/data/newsletter-state-of-private-markets/" target="_blank" rel="noopener">Carta, State of Private Markets 2025</a> · <a href="https://carta.com/data/safe-valuation-caps-q2-2026/" target="_blank" rel="noopener">Carta, SAFE T2 2026</a> · <a href="https://carta.com/data/newsletter-employee-option-pool-size/" target="_blank" rel="noopener">Carta, pool</a> · <a href="https://carta.com/data/linkedin-startup-decade-fund-lifecycle-optimism/" target="_blank" rel="noopener">Carta, âge par tour</a> · <a href="https://carta.com/data/linkedin-seed-to-series-b-only-15-to-35-percent/" target="_blank" rel="noopener">Carta, passage seed → B</a> · <a href="https://www.legifiscal.fr/reperes-fiscaux/flat-tax-pfu-champ-application-taux-applicables-2026.html" target="_blank" rel="noopener">PFU 2026</a></p>
-    <h3>Limites</h3>
+    <h3>Links</h3>
+    <p><a href="https://carta.com/data/linkedin-vc-fundraising-benchmarks-2026/" target="_blank" rel="noopener">Carta, July 2026 benchmarks</a> · <a href="https://carta.com/data/newsletter-founder-ownership-2026/" target="_blank" rel="noopener">Carta Founder Ownership Report 2026</a> · <a href="https://carta.com/data/newsletter-state-of-private-markets/" target="_blank" rel="noopener">Carta, State of Private Markets 2025</a> · <a href="https://carta.com/data/safe-valuation-caps-q2-2026/" target="_blank" rel="noopener">Carta, SAFEs Q2 2026</a> · <a href="https://carta.com/data/newsletter-employee-option-pool-size/" target="_blank" rel="noopener">Carta, pool</a> · <a href="https://carta.com/data/linkedin-startup-decade-fund-lifecycle-optimism/" target="_blank" rel="noopener">Carta, age by round</a> · <a href="https://carta.com/data/linkedin-seed-to-series-b-only-15-to-35-percent/" target="_blank" rel="noopener">Carta, seed → B graduation</a> · <a href="https://www.legifiscal.fr/reperes-fiscaux/flat-tax-pfu-champ-application-taux-applicables-2026.html" target="_blank" rel="noopener">PFU 2026</a></p>
+    <h3>Limitations</h3>
     <ul>
-      <li>Pas de down round avec anti-dilution, pas de ventes secondaires, pool traité comme des actions ordinaires.</li>
-      <li>Fiscalité simplifiée : un taux unique sur le produit, sans apport-cession, régime BSPCE ni CEHR automatique.</li>
-      <li>Ce n'est ni un conseil juridique ni un conseil fiscal : faites valider le pacte et la fiscalité par un avocat et un fiscaliste.</li>
+      <li>No down rounds with anti-dilution, no secondary sales, pool treated as common stock.</li>
+      <li>Simplified tax: a single rate on proceeds, ignoring French holding-company rollover (apport-cession), BSPCE rules and the automatic high-income surtax.</li>
+      <li>This is neither legal nor tax advice: have the shareholders' agreement and tax treatment reviewed by a lawyer and a tax advisor.</li>
     </ul>
   </div>
 </main>
@@ -297,34 +297,34 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 </div>
 
 <script>
-// ============================================================ modèle (identique à model.py)
-const STAGES=["Pré-seed","Seed","Série A","Série B","Série C","Série D"];
+// ============================================================ model (same as model.py)
+const STAGES=["Pre-seed","Seed","Series A","Series B","Series C","Series D"];
 const RS=STAGES.slice(1);
-const POOL="Pool salariés (BSPCE)",FRICTION="Bridges, extensions, autres tours",FUT="Futur founder (CMO)";
+const POOL="Employee pool (ESOP)",FRICTION="Bridges, extensions, other rounds",FUT="Future founder (CMO)";
 const FN=["CTO","CEO","Chief Scientist",FUT];
 const FDEF={"CTO":45,"CEO":25,"Chief Scientist":25,[FUT]:5};
 const BASE={
  "Seed":{post:24.3,dil:.18,sigma:1.05,pool:.12,grad:.35,dil_sd:.05,month:16,p_acq:.04,acq_mult:.6},
- "Série A":{post:80,dil:.18,sigma:.75,pool:.135,grad:.50,dil_sd:.05,month:34,p_acq:.05,acq_mult:.8},
- "Série B":{post:191,dil:.13,sigma:.85,pool:.15,grad:.55,dil_sd:.045,month:56,p_acq:.07,acq_mult:1.0},
- "Série C":{post:391,dil:.10,sigma:.85,pool:.16,grad:.55,dil_sd:.04,month:74,p_acq:.09,acq_mult:1.2},
- "Série D":{post:789,dil:.08,sigma:.90,pool:.17,grad:0,dil_sd:.035,month:100,p_acq:.10,acq_mult:1.3}};
+ "Series A":{post:80,dil:.18,sigma:.75,pool:.135,grad:.50,dil_sd:.05,month:34,p_acq:.05,acq_mult:.8},
+ "Series B":{post:191,dil:.13,sigma:.85,pool:.15,grad:.55,dil_sd:.045,month:56,p_acq:.07,acq_mult:1.0},
+ "Series C":{post:391,dil:.10,sigma:.85,pool:.16,grad:.55,dil_sd:.04,month:74,p_acq:.09,acq_mult:1.2},
+ "Series D":{post:789,dil:.08,sigma:.90,pool:.17,grad:0,dil_sd:.035,month:100,p_acq:.10,acq_mult:1.3}};
 const PRE={amount:1.5,cap:15,grad:.4,month:3,p_acq:.03,acq_mult:.5};
 const SAFE_CAP_REF=[[.25,7.5],[1,10],[2.5,15],[Infinity,35]];
 const SECTORS={
- "IA appli / infra agentique":{mult:[1.15,1.15,1.15,1.25,1.40,1.60],dil:-.01},
- "Moyenne marché (IA + non-IA)":{mult:[1,1,1,1,1,1],dil:0},
- "Logiciel non-IA":{mult:[.85,.85,.83,.80,.70,.60],dil:.015}};
-const REGIONS={"US (référence Carta)":{mult:[1,1,1,1,1,1],dil:0},"Europe / France":{mult:[.60,.55,.62,.65,.70,.75],dil:.02}};
+ "AI app / agentic infra":{mult:[1.15,1.15,1.15,1.25,1.40,1.60],dil:-.01},
+ "Market average (AI + non-AI)":{mult:[1,1,1,1,1,1],dil:0},
+ "Non-AI software":{mult:[.85,.85,.83,.80,.70,.60],dil:.015}};
+const REGIONS={"US (Carta baseline)":{mult:[1,1,1,1,1,1],dil:0},"Europe / France":{mult:[.60,.55,.62,.65,.70,.75],dil:.02}};
 const TARGETS={
- "IA appli / infra agentique":{"Seed":.56,"Série A":.375,"Série B":.273,"Série C":.19,"Série D":.14},
- "Moyenne marché (IA + non-IA)":{"Seed":.56,"Série A":.36,"Série B":.23,"Série C":.161,"Série D":.12},
- "Logiciel non-IA":{"Seed":.56,"Série A":.36,"Série B":.218,"Série C":.15,"Série D":.11}};
+ "AI app / agentic infra":{"Seed":.56,"Series A":.375,"Series B":.273,"Series C":.19,"Series D":.14},
+ "Market average (AI + non-AI)":{"Seed":.56,"Series A":.36,"Series B":.23,"Series C":.161,"Series D":.12},
+ "Non-AI software":{"Seed":.56,"Series A":.36,"Series B":.218,"Series C":.15,"Series D":.11}};
 const PCTS={P10:-1.2816,P25:-.6745,P50:0,P75:.6745,P90:1.2816};const PK=Object.keys(PCTS);
-const PATHS=["Historique observé (Carta)","Marché 2026 (parcours propre)"];
+const PATHS=["Observed history (Carta)","2026 market (clean path)"];
 const PFU=.314;
 const SPLITS={"Base 45/25/25/5":[45,25,25,5],"40/30/25/5":[40,30,25,5],"35/30/30/5":[35,30,30,5],
- "Quasi égal 32/32/31/5":[32,32,31,5],"Bonus MVP : 10 + 3×30 = 40/30/30/0":[40,30,30,0],"50/20/20/10":[50,20,20,10]};
+ "Near-equal 32/32/31/5":[32,32,31,5],"MVP bonus: 10 + 3×30 = 40/30/30/0":[40,30,30,0],"50/20/20/10":[50,20,20,10]};
 const clone=o=>JSON.parse(JSON.stringify(o));
 const rnd=(x,d)=>Math.round(x*10**d)/10**d;
 
@@ -333,14 +333,14 @@ function stageDefaults(sec,reg){const s=SECTORS[sec],r=REGIONS[reg],out={};
     dil:rnd(Math.min(.35,Math.max(.03,b.dil+s.dil+r.dil)),3)});});
   const m=s.mult[0]*r.mult[0];return {rounds:out,preseed:Object.assign({},PRE,{amount:rnd(PRE.amount*m,2),cap:rnd(PRE.cap*m+1e-9,1)})};}
 function refCap(amount,sec,reg){const c=SAFE_CAP_REF.find(([l])=>amount<=l)[1];return c*SECTORS[sec].mult[0]*REGIONS[reg].mult[0];}
-function defaultParams(sec="IA appli / infra agentique",reg="US (référence Carta)"){const d=stageDefaults(sec,reg);
-  return {founders:clone(FDEF),sector:sec,region:reg,path_mode:PATHS[0],preseed_mode:"SAFE",preseed:d.preseed,seed_mode:"Pricée",
+function defaultParams(sec="AI app / agentic infra",reg="US (Carta baseline)"){const d=stageDefaults(sec,reg);
+  return {founders:clone(FDEF),sector:sec,region:reg,path_mode:PATHS[0],preseed_mode:"SAFE",preseed:d.preseed,seed_mode:"Priced",
    bridge_on:true,bridge_frac:.35,bridge_cap_mult:1.5,safe_discount:0,ext_on:false,ext_dil:.05,pool_on:true,pool_initial:0,pool_mode:"pre",
-   last_stage:"Série C",rounds:d.rounds,condition_preseed:true,rho0:.5,fut_mode:"reserve",fut_join_month:12,leaver:"Aucun",leave_month:24,
+   last_stage:"Series C",rounds:d.rounds,condition_preseed:true,rho0:.5,fut_mode:"reserve",fut_join_month:12,leaver:"No one",leave_month:24,
    leaver_type:"good",vest_months:48,cliff:12,vest_credit:{"CTO":0,"CEO":0,"Chief Scientist":0,[FUT]:0},pref_mult:1,participating:false,
    seniority:"pari passu",tax:PFU,term_mult:1.2,term_sigma:1.0,term_fail:.2,acq_sigma:.9,frictions:{}};}
-function months(P){const m={"Pré-seed":P.preseed.month};RS.forEach(s=>m[s]=P.rounds[s].month);return m;}
-function preseedZ0(P){if(!P.condition_preseed||P.preseed_mode==="Aucune")return 0;return Math.log(P.preseed.cap/refCap(P.preseed.amount,P.sector,P.region))/.7;}
+function months(P){const m={"Pre-seed":P.preseed.month};RS.forEach(s=>m[s]=P.rounds[s].month);return m;}
+function preseedZ0(P){if(!P.condition_preseed||P.preseed_mode==="None")return 0;return Math.log(P.preseed.cap/refCap(P.preseed.amount,P.sector,P.region))/.7;}
 
 function simulate(P,z={},dils={}){
   const f=Object.assign({},P.founders);let fT=0;if(P.fut_mode==="join"){fT=(f[FUT]||0)/100;delete f[FUT];}
@@ -348,7 +348,7 @@ function simulate(P,z={},dils={}){
   const inv={};
   if(P.pool_on&&P.pool_initial>0){for(const k in own)own[k]*=(1-P.pool_initial);own[POOL]=P.pool_initial;}
   let pending=[];const snaps=[];const M=months(P);const ev=[];
-  if(P.fut_mode==="join"&&fT>0)ev.push([P.fut_join_month,"join"]);if(P.leaver!=="Aucun")ev.push([P.leave_month,"leave"]);ev.sort((a,b)=>a[0]-b[0]);
+  if(P.fut_mode==="join"&&fT>0)ev.push([P.fut_join_month,"join"]);if(P.leaver!=="No one")ev.push([P.leave_month,"leave"]);ev.sort((a,b)=>a[0]-b[0]);
   const scale=x=>{for(const k in own)own[k]*=x;};
   const apply=kind=>{if(kind==="join"){scale(1-fT);own[FUT]=(own[FUT]||0)+fT;return;}
     const fd=P.leaver;const t=P.leave_month+(P.vest_credit[fd]||0);const v=(P.leaver_type==="bad"||t<P.cliff)?0:Math.min(1,t/P.vest_months);
@@ -361,24 +361,24 @@ function simulate(P,z={},dils={}){
   const money=(lab,d,amt)=>{scale(1-d);own[lab]=(own[lab]||0)+d;inv[lab]=(inv[lab]||0)+amt;};
   const snap=(stage,post,raised)=>{const i2=Object.assign({},inv);pending.forEach(p=>i2[p.lab]=(i2[p.lab]||0)+p.a);
     snaps.push({stage,month:M[stage],post,raised,own:asConv(),invested:i2});};
-  runEv(M["Pré-seed"]);
-  if(P.preseed_mode!=="Aucune"){const a=P.preseed.amount,c=P.preseed.cap;
-    if(P.preseed_mode==="SAFE")pending.push({lab:"SAFE pré-seed",a,c,disc:P.safe_discount});else money("Investisseurs Pré-seed",Math.min(a/c,.5),a);
-    snap("Pré-seed",c,a);}else snap("Pré-seed",NaN,0);
+  runEv(M["Pre-seed"]);
+  if(P.preseed_mode!=="None"){const a=P.preseed.amount,c=P.preseed.cap;
+    if(P.preseed_mode==="SAFE")pending.push({lab:"SAFE (pre-seed)",a,c,disc:P.safe_discount});else money("Investors Pre-seed",Math.min(a/c,.5),a);
+    snap("Pre-seed",c,a);}else snap("Pre-seed",NaN,0);
   const last=STAGES.indexOf(P.last_stage);
   RS.forEach((st,i0)=>{const i=i0+1;if(i>last)return;runEv(M[st]);const r=P.rounds[st];
     const post=r.post*Math.exp((z[st]||0)*r.sigma);const d=dils[st]??r.dil;let raised=post*d;
     const fr=P.path_mode===PATHS[0]?(P.frictions[st]||0):0;const pp=snaps.length&&!isNaN(snaps[snaps.length-1].post)?snaps[snaps.length-1].post:post*(1-d);
-    if(st==="Seed"&&P.seed_mode==="SAFE"){if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on)topup(r.pool);pending.push({lab:"SAFE seed",a:raised,c:post,disc:P.safe_discount});}
-    else{convert(post*(1-d));if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on&&P.pool_mode==="pre")topup(r.pool/(1-d));money("Investisseurs "+st,d,raised);
+    if(st==="Seed"&&P.seed_mode==="SAFE"){if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on)topup(r.pool);pending.push({lab:"SAFE (seed)",a:raised,c:post,disc:P.safe_discount});}
+    else{convert(post*(1-d));if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on&&P.pool_mode==="pre")topup(r.pool/(1-d));money("Investors "+st,d,raised);
       if(P.pool_on&&P.pool_mode==="post")topup(r.pool);
-      if(P.ext_on&&["Série A","Série B","Série C"].includes(st)){money("Investisseurs "+st,P.ext_dil,post*P.ext_dil);raised+=post*P.ext_dil;}}
+      if(P.ext_on&&["Series A","Series B","Series C"].includes(st)){money("Investors "+st,P.ext_dil,post*P.ext_dil);raised+=post*P.ext_dil;}}
     snap(st,post,raised);
     if(st==="Seed"&&P.bridge_on&&last>=2)pending.push({lab:"Bridge SAFE",a:raised*P.bridge_frac,c:post*P.bridge_cap_mult,disc:P.safe_discount});});
   return snaps;}
 const fTot=s=>FN.reduce((a,f)=>a+(s.own[f]||0),0);
 const CAL={};
-function calibrate(sec){if(CAL[sec])return CAL[sec];const q=defaultParams(sec);q.last_stage="Série D";q.frictions={};
+function calibrate(sec){if(CAL[sec])return CAL[sec];const q=defaultParams(sec);q.last_stage="Series D";q.frictions={};
   RS.forEach((st,i0)=>{const idx=i0+1,tgt=TARGETS[sec][st];q.frictions[st]=0;if(fTot(simulate(q)[idx])<=tgt)return;
     let lo=0,hi=.4;for(let k=0;k<30;k++){const mid=(lo+hi)/2;q.frictions[st]=mid;if(fTot(simulate(q)[idx])>tgt)lo=mid;else hi=mid;}
     q.frictions[st]=rnd((lo+hi)/2,4);});return CAL[sec]=q.frictions;}
@@ -418,28 +418,28 @@ function monteCarlo(P,n,rho,ql){const u=rng(7),N=gaussF(u);const last=STAGES.ind
   const gross={};FN.forEach(f=>gross[f]=new Float64Array(n));const outcome=[];
   for(let i=0;i<n;i++){const zc=r0*z0+c0*N();const z={};RS.forEach(s=>z[s]=rho*zc+a*N());
     const dils={};RS.forEach(s=>dils[s]=Math.min(.35,Math.max(.03,P.rounds[s].dil+P.rounds[s].dil_sd*N())));
-    const sn=simulate(P,z,dils);let k=P.preseed_mode!=="Aucune"?0:1;let E=0,kind="",s;
+    const sn=simulate(P,z,dils);let k=P.preseed_mode!=="None"?0:1;let E=0,kind="",s;
     for(;;){s=sn[k];const post=isNaN(s.post)?0:s.post;
-      if(k===last){if(u()<P.term_fail){E=0;kind="Échec après "+s.stage;}else{E=post*Math.exp(Math.log(P.term_mult)+P.term_sigma*N()+.3*zc);kind="Sortie après "+s.stage;}break;}
+      if(k===last){if(u()<P.term_fail){E=0;kind="Failure after "+s.stage;}else{E=post*Math.exp(Math.log(P.term_mult)+P.term_sigma*N()+.3*zc);kind="Exit after "+s.stage;}break;}
       const g=rows[k].grad;const th=invNorm(1-Math.min(Math.max(g,1e-4),1-1e-4));
       if(ql*zc+b*N()>th){k++;continue;}
-      if(u()<Math.min(1,rows[k].p_acq/Math.max(1e-6,1-g))){E=post*Math.exp(Math.log(rows[k].acq_mult)+P.acq_sigma*N());kind="Rachat après "+s.stage;}
-      else{E=0;kind="Échec après "+s.stage;}break;}
+      if(u()<Math.min(1,rows[k].p_acq/Math.max(1e-6,1-g))){E=post*Math.exp(Math.log(rows[k].acq_mult)+P.acq_sigma*N());kind="Acquisition after "+s.stage;}
+      else{E=0;kind="Failure after "+s.stage;}break;}
     outcome.push(kind);if(E>0){const pr=proceeds(P,s,E);FN.forEach(f=>{const v=pr[f]||0;gross[f][i]=v>1e-4?v:0;});}}
   return {gross,outcome,n};}
 function pctl(arr,q){if(!arr.length)return NaN;const a=Float64Array.from(arr).sort();const i=(a.length-1)*q/100,lo=Math.floor(i),hi=Math.ceil(i);return a[lo]+(a[hi]-a[lo])*(i-lo);}
 
 function variants(P){const v=[];const mk=(g,l,kw)=>{const q=clone(P);Object.assign(q,kw||{});if(kw&&kw.sector)q.frictions=calibrate(kw.sector);v.push([g,l,q]);};
-  mk("Référence","Réglages actuels");PATHS.forEach(m=>mk("Parcours",m,{path_mode:m}));
-  ["SAFE","Pricée","Aucune"].forEach(m=>mk("Pré-seed","Pré-seed : "+m,{preseed_mode:m}));
-  ["Pricée","SAFE"].forEach(m=>mk("Seed","Seed : "+m.toLowerCase(),{seed_mode:m}));
-  mk("Bridge","Sans bridge SAFE",{bridge_on:false});mk("Bridge","Avec bridge SAFE avant A",{bridge_on:true});
-  mk("Pool","Sans pool salariés",{pool_on:false});mk("Pool","Pool rechargé en pré-money",{pool_on:true,pool_mode:"pre"});
-  mk("Pool","Pool rechargé en post-money",{pool_on:true,pool_mode:"post"});
-  mk("Futur founder","Réserve détenue dès aujourd'hui",{fut_mode:"reserve"});mk("Futur founder","Émis à l'arrivée (mois "+P.fut_join_month+")",{fut_mode:"join"});
-  mk("Préférences","1x non participatif",{participating:false,pref_mult:1});mk("Préférences","1x participatif",{participating:true,pref_mult:1});
-  Object.keys(SECTORS).forEach(s=>{const d=stageDefaults(s,P.region);mk("Secteur",s,{sector:s,rounds:d.rounds,preseed:d.preseed});});
-  Object.keys(REGIONS).forEach(r=>{const d=stageDefaults(P.sector,r);mk("Région",r,{region:r,rounds:d.rounds,preseed:d.preseed});});
+  mk("Baseline","Current settings");PATHS.forEach(m=>mk("Dilution path",m,{path_mode:m}));
+  ["SAFE","Priced","None"].forEach(m=>mk("Pre-seed","Pre-seed: "+m,{preseed_mode:m}));
+  ["Priced","SAFE"].forEach(m=>mk("Seed","Seed: "+m.toLowerCase(),{seed_mode:m}));
+  mk("Bridge","No bridge SAFE",{bridge_on:false});mk("Bridge","Bridge SAFE before Series A",{bridge_on:true});
+  mk("Pool","No employee pool",{pool_on:false});mk("Pool","Pool refreshed pre-money",{pool_on:true,pool_mode:"pre"});
+  mk("Pool","Pool refreshed post-money",{pool_on:true,pool_mode:"post"});
+  mk("Future founder","Reserve held from day one",{fut_mode:"reserve"});mk("Future founder","Issued on arrival (month "+P.fut_join_month+")",{fut_mode:"join"});
+  mk("Preferences","1x non-participating",{participating:false,pref_mult:1});mk("Preferences","1x participating",{participating:true,pref_mult:1});
+  Object.keys(SECTORS).forEach(s=>{const d=stageDefaults(s,P.region);mk("Sector",s,{sector:s,rounds:d.rounds,preseed:d.preseed});});
+  Object.keys(REGIONS).forEach(r=>{const d=stageDefaults(P.sector,r);mk("Region",r,{region:r,rounds:d.rounds,preseed:d.preseed});});
   return v;}
 
 // ============================================================ interface
@@ -450,57 +450,57 @@ const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim
 const FCOL={"CTO":"--cto","CEO":"--ceo","Chief Scientist":"--cs",[FUT]:"--fut"};
 const GREYS=["#C4CAD3","#ADB4BF","#979FAB","#828A98","#6D7685","#596273","#454E60","#343C4D"];
 function colorMap(hs){const m={};let g=0;hs.forEach(h=>{if(FCOL[h])m[h]=css(FCOL[h]);else if(h===POOL)m[h]=css("--pool");else if(h===FRICTION)m[h]=css("--fric");else m[h]=GREYS[g++%GREYS.length];});return m;}
-const nf1=new Intl.NumberFormat("fr-FR",{minimumFractionDigits:1,maximumFractionDigits:1});
-const nf2=new Intl.NumberFormat("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
-const nf0=new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0});
-const pc=x=>nf1.format(x*100)+" %";const fxv=()=>UI.cur==="€"?UI.fx:1;
+const nf1=new Intl.NumberFormat("en-US",{minimumFractionDigits:1,maximumFractionDigits:1});
+const nf2=new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const nf0=new Intl.NumberFormat("en-US",{maximumFractionDigits:0});
+const pc=x=>nf1.format(x*100)+"%";const fxv=()=>UI.cur==="€"?UI.fx:1;
 function money(m){if(m==null||isNaN(m))return"—";const v=m*fxv(),c=UI.cur;
-  if(Math.abs(v)>=1000)return nf2.format(v/1000)+" Md"+c;if(Math.abs(v)>=1)return nf1.format(v)+" M"+c;return nf0.format(v*1000)+" k"+c;}
-const short=h=>h.replace("Investisseurs ","").replace(" (BSPCE)","").replace(" (CMO)","");
+  if(Math.abs(v)>=1000)return c+nf2.format(v/1000)+"B";if(Math.abs(v)>=1)return c+nf1.format(v)+"M";return c+nf0.format(v*1000)+"k";}
+const short=h=>h.replace("Investors ","").replace(" (BSPCE)","").replace(" (CMO)","");
 
 function buildControls(){
   const fc=$("founderCtl");fc.innerHTML="";
-  FN.forEach((f,i)=>fc.insertAdjacentHTML("beforeend",`<div class="row"><label>${f}${i===3?" — réserve":""} <b id="fv${i}"></b></label><input type="range" min="${i<3?10:0}" max="50" step="0.5" data-f="${f}"></div>`));
+  FN.forEach((f,i)=>fc.insertAdjacentHTML("beforeend",`<div class="row"><label>${f}${i===3?" — reserve":""} <b id="fv${i}"></b></label><input type="range" min="${i<3?10:0}" max="50" step="0.5" data-f="${f}"></div>`));
   fc.insertAdjacentHTML("beforeend",`<div id="fwarn"></div>`);
   fc.querySelectorAll("input").forEach(el=>el.addEventListener("input",e=>{S.founders[e.target.dataset.f]=+e.target.value;update();}));
   $("sector").innerHTML=Object.keys(SECTORS).map(s=>`<option>${s}</option>`).join("");
   $("region").innerHTML=Object.keys(REGIONS).map(s=>`<option>${s}</option>`).join("");
   $("last").innerHTML=RS.map(s=>`<option>${s}</option>`).join("");
-  $("leaver").innerHTML=["Aucun"].concat(FN).map(s=>`<option>${s}</option>`).join("");
-  $("who").innerHTML=FN.concat(["Tous les founders"]).map(s=>`<option>${s}</option>`).join("");
+  $("leaver").innerHTML=["No one"].concat(FN).map(s=>`<option>${s}</option>`).join("");
+  $("who").innerHTML=FN.concat(["All founders"]).map(s=>`<option>${s}</option>`).join("");
   $("whoMc").innerHTML=FN.map(s=>`<option>${s}</option>`).join("");
   buildRounds();}
 function buildRounds(){
-  const cols=[["post","Post-money M$",1,1],["dil","Dilution %",100,.5],["pool","Pool %",100,.5],["sigma","σ",1,.05],["grad","Suivant %",100,5],["month","Mois",1,1],["p_acq","Rachat % (estim.)",100,1],["acq_mult","Rachat × post (estim.)",1,.1]];
-  let h=`<table><tr><th>Tour</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr>`;
-  h+=`<tr><td>Pré-seed</td><td>—</td><td>—</td><td>—</td><td>—</td>${[["grad",100,5],["month",1,1],["p_acq",100,1],["acq_mult",1,.1]].map(c=>`<td><input type="number" step="${c[2]}" data-p="${c[0]}" data-m="${c[1]}" value="${+(S.preseed[c[0]]*c[1]).toFixed(2)}"></td>`).join("")}</tr>`;
+  const cols=[["post","Post-money $M",1,1],["dil","Dilution %",100,.5],["pool","Pool %",100,.5],["sigma","σ",1,.05],["grad","Next round %",100,5],["month","Month",1,1],["p_acq","Acq. % (est.)",100,1],["acq_mult","Acq. × post (est.)",1,.1]];
+  let h=`<table><tr><th>Round</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr>`;
+  h+=`<tr><td>Pre-seed</td><td>—</td><td>—</td><td>—</td><td>—</td>${[["grad",100,5],["month",1,1],["p_acq",100,1],["acq_mult",1,.1]].map(c=>`<td><input type="number" step="${c[2]}" data-p="${c[0]}" data-m="${c[1]}" value="${+(S.preseed[c[0]]*c[1]).toFixed(2)}"></td>`).join("")}</tr>`;
   RS.forEach(s=>{h+=`<tr><td>${s}</td>${cols.map(c=>`<td><input type="number" step="${c[3]}" data-r="${s}" data-k="${c[0]}" data-m="${c[2]}" value="${+(S.rounds[s][c[0]]*c[2]).toFixed(2)}"></td>`).join("")}</tr>`;});
-  $("roundsCtl").innerHTML=h+`</table><p class="note">σ fixe l'écart entre centiles : P90 = médiane × e^(1,28σ). « Mois » = âge de la société au tour.</p>`;
+  $("roundsCtl").innerHTML=h+`</table><p class="note">σ sets the spread between percentiles: P90 = median × e^(1.28σ). "Month" = company age at the round.</p>`;
   $("roundsCtl").querySelectorAll("input").forEach(el=>el.addEventListener("change",e=>{const t=e.target;const v=+t.value/(+t.dataset.m);if(isNaN(v)||v<0)return;
     if(t.dataset.r)S.rounds[t.dataset.r][t.dataset.k]=v;else S.preseed[t.dataset.p]=v;update();}));}
 function setTxt(id,t){$(id).textContent=t;}
 function syncControls(){
-  document.querySelectorAll("#founderCtl input").forEach((el,i)=>{el.value=S.founders[el.dataset.f];setTxt("fv"+i,nf1.format(S.founders[el.dataset.f])+" %");});
+  document.querySelectorAll("#founderCtl input").forEach((el,i)=>{el.value=S.founders[el.dataset.f];setTxt("fv"+i,nf1.format(S.founders[el.dataset.f])+"%");});
   $("sector").value=S.sector;$("region").value=S.region;$("last").value=S.last_stage;$("cond").checked=S.condition_preseed;
   $("ref").value=PK.indexOf(UI.ref);setTxt("refv",UI.ref);$("pa").value=S.preseed.amount;$("pc").value=S.preseed.cap;
-  $("bridge_on").checked=S.bridge_on;$("bridge_frac").value=S.bridge_frac*100;setTxt("bfv",Math.round(S.bridge_frac*100)+" %");
+  $("bridge_on").checked=S.bridge_on;$("bridge_frac").value=S.bridge_frac*100;setTxt("bfv",Math.round(S.bridge_frac*100)+"%");
   $("bridge_cap").value=S.bridge_cap_mult;setTxt("bcv",nf1.format(S.bridge_cap_mult)+"×");
-  $("disc").value=S.safe_discount*100;setTxt("dv",Math.round(S.safe_discount*100)+" %");
-  $("ext_on").checked=S.ext_on;$("ext_dil").value=S.ext_dil*100;setTxt("ev",Math.round(S.ext_dil*100)+" %");
-  $("pool_on").checked=S.pool_on;$("pool_initial").value=S.pool_initial*100;setTxt("piv",Math.round(S.pool_initial*100)+" %");
-  $("fut_join").value=S.fut_join_month;setTxt("fjv","mois "+S.fut_join_month);$("leaver").value=S.leaver;
-  $("leave_month").value=S.leave_month;setTxt("lmv",S.leave_month);$("vest_months").value=S.vest_months;setTxt("vmv",S.vest_months+" mois");
-  $("cliff").value=S.cliff;setTxt("clv",S.cliff+" mois");$("cto_credit").value=S.vest_credit.CTO;setTxt("ccv",S.vest_credit.CTO+" mois");
-  $("participating").checked=S.participating;$("tax").value=S.tax*100;setTxt("txv",nf1.format(S.tax*100)+" %");
-  $("term_mult").value=S.term_mult;setTxt("tmv",nf1.format(S.term_mult)+"×");$("term_fail").value=S.term_fail*100;setTxt("tfv",Math.round(S.term_fail*100)+" %");
+  $("disc").value=S.safe_discount*100;setTxt("dv",Math.round(S.safe_discount*100)+"%");
+  $("ext_on").checked=S.ext_on;$("ext_dil").value=S.ext_dil*100;setTxt("ev",Math.round(S.ext_dil*100)+"%");
+  $("pool_on").checked=S.pool_on;$("pool_initial").value=S.pool_initial*100;setTxt("piv",Math.round(S.pool_initial*100)+"%");
+  $("fut_join").value=S.fut_join_month;setTxt("fjv","month "+S.fut_join_month);$("leaver").value=S.leaver;
+  $("leave_month").value=S.leave_month;setTxt("lmv",S.leave_month);$("vest_months").value=S.vest_months;setTxt("vmv",S.vest_months+" months");
+  $("cliff").value=S.cliff;setTxt("clv",S.cliff+" months");$("cto_credit").value=S.vest_credit.CTO;setTxt("ccv",S.vest_credit.CTO+" months");
+  $("participating").checked=S.participating;$("tax").value=S.tax*100;setTxt("txv",nf1.format(S.tax*100)+"%");
+  $("term_mult").value=S.term_mult;setTxt("tmv",nf1.format(S.term_mult)+"×");$("term_fail").value=S.term_fail*100;setTxt("tfv",Math.round(S.term_fail*100)+"%");
   ["bridge_frac","bridge_cap"].forEach(id=>$(id).disabled=!S.bridge_on);$("ext_dil").disabled=!S.ext_on;$("pool_initial").disabled=!S.pool_on;
-  $("fut_join").disabled=S.fut_mode!=="join";$("leave_month").disabled=S.leaver==="Aucun";
+  $("fut_join").disabled=S.fut_mode!=="join";$("leave_month").disabled=S.leaver==="No one";
   document.querySelectorAll("[data-seg]").forEach(g=>{const key=g.dataset.seg;const cur=key==="cur"?UI.cur:String(S[key]);
     g.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===cur));});
   $("fxrow").hidden=UI.cur!=="€";$("fx").value=UI.fx;
-  setTxt("pdil",S.preseed_mode==="Aucune"?"Pas de pré-seed.":"Dilution pré-seed ≈ "+nf1.format(S.preseed.amount/S.preseed.cap*100)+" % · cap médian pour ce montant ≈ "+money(refCap(S.preseed.amount,S.sector,S.region)));
+  setTxt("pdil",S.preseed_mode==="None"?"No pre-seed.":"Pre-seed dilution ≈ "+nf1.format(S.preseed.amount/S.preseed.cap*100)+"% · median cap for this amount ≈ "+money(refCap(S.preseed.amount,S.sector,S.region)));
   const tot=FN.reduce((a,f)=>a+S.founders[f],0);
-  $("fwarn").innerHTML=Math.abs(tot-100)>1e-6?`<div class="warn">Total ${nf1.format(tot)} % : les parts sont ramenées à 100 % au prorata.</div>`:`<p class="note">Total 100 %</p>`;
+  $("fwarn").innerHTML=Math.abs(tot-100)>1e-6?`<div class="warn">Total ${nf1.format(tot)}%: stakes are scaled pro rata to 100%.</div>`:`<p class="note">Total 100%</p>`;
   $("who").value=UI.who;$("whoMc").value=UI.whoMc;setTxt("nv",nf0.format(UI.mc_n));setTxt("rv",nf2.format(UI.mc_rho));setTxt("qv",nf2.format(UI.mc_ql));}
 function on(id,ev,fn){$(id).addEventListener(ev,fn);}
 function wire(){
@@ -526,10 +526,10 @@ function wire(){
     document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+UI.tab));renderTab();}));
   on("reset","click",()=>{S=defaultParams();S.frictions=calibrate(S.sector);UI.ref="P50";UI.stage=null;buildRounds();update();});
   on("copyCode","click",async()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify({S,UI:{cur:UI.cur,fx:UI.fx,ref:UI.ref}}))));
-    try{await navigator.clipboard.writeText(code);setTxt("codeMsg","Code copié.");}catch(e){$("codeIn").value=code;$("codeIn").select();setTxt("codeMsg","Copie automatique bloquée : le code est sélectionné dans le champ, copiez-le.");}});
+    try{await navigator.clipboard.writeText(code);setTxt("codeMsg","Code copied.");}catch(e){$("codeIn").value=code;$("codeIn").select();setTxt("codeMsg","Automatic copy blocked: the code is selected in the field, copy it.");}});
   on("loadCode","click",()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob($("codeIn").value.trim()))));
-    const d=defaultParams(o.S.sector,o.S.region);S=Object.assign(d,o.S);S.frictions=calibrate(S.sector);Object.assign(UI,o.UI||{});UI.stage=null;buildRounds();update();setTxt("codeMsg","Scénario chargé.");}
-    catch(e){setTxt("codeMsg","Ce code n'est pas valide. Vérifiez qu'il a été copié en entier.");}});
+    const d=defaultParams(o.S.sector,o.S.region);S=Object.assign(d,o.S);S.frictions=calibrate(S.sector);Object.assign(UI,o.UI||{});UI.stage=null;buildRounds();update();setTxt("codeMsg","Scenario loaded.");}
+    catch(e){setTxt("codeMsg","This code is not valid. Check that it was copied in full.");}});
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",update);
   window.addEventListener("resize",()=>{renderHero();document.querySelectorAll(".panel.on .chart").forEach(c=>c.data&&Plotly.Plots.resize(c));});}
 function resetMarket(sec,reg){const d=stageDefaults(sec,reg);S.sector=sec;S.region=reg;S.rounds=d.rounds;S.preseed=d.preseed;S.frictions=calibrate(sec);buildRounds();update();}
@@ -539,15 +539,15 @@ function togglePlay(){if(playT){stopPlay();return;}const n=P_PATHS[UI.ref].lengt
   playT=setInterval(()=>{UI.stage++;if(UI.stage>=n-1){UI.stage=n-1;stopPlay();}renderHero();renderLinesMarker();},900);}
 function stopPlay(){if(playT){clearInterval(playT);playT=null;}$("play").textContent="▶";}
 
-// ------------------------------------------------------------ rendu
+// ------------------------------------------------------------ render
 let P_PATHS=null;
 const CFG={displayModeBar:false,responsive:true};const hasPlotly=()=>typeof Plotly!=="undefined";
-function baseLayout(x){return Object.assign({paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",separators:", ",
+function baseLayout(x){return Object.assign({paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",separators:".,",
   font:{family:"Schibsted Grotesk, system-ui, sans-serif",color:css("--ink"),size:12},margin:{l:52,r:24,t:12,b:40},
   xaxis:{gridcolor:css("--line"),zerolinecolor:css("--line")},yaxis:{gridcolor:css("--line"),zerolinecolor:css("--line")},
   legend:{orientation:"h",y:-0.18},hovermode:"x unified"},x||{});}
 const LOGT=[0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
-function logAxis(){const lab=t=>t>=1000?nf0.format(t/1000)+" Md"+UI.cur:(t>=1?nf0.format(t)+" M"+UI.cur:nf1.format(t)+" M"+UI.cur);
+function logAxis(){const lab=t=>t>=1000?UI.cur+nf0.format(t/1000)+"B":(t>=1?UI.cur+nf0.format(t)+"M":UI.cur+nf1.format(t)+"M");
   return {type:"log",gridcolor:css("--line"),tickvals:LOGT,ticktext:LOGT.map(lab)};}
 function hexA(c,a){if(c.startsWith("#")){const n=c.slice(1);return`rgba(${parseInt(n.slice(0,2),16)},${parseInt(n.slice(2,4),16)},${parseInt(n.slice(4,6),16)},${a})`;}return c;}
 function holdersOf(sn){const h=[];sn.forEach(s=>Object.keys(s.own).forEach(k=>{if(!h.includes(k))h.push(k);}));return h;}
@@ -559,39 +559,39 @@ function renderHero(){
   const s=sn[UI.stage];const tot=FN.reduce((a,f)=>a+S.founders[f],0);const start={};FN.forEach(f=>start[f]=S.founders[f]/tot);
   const hs=holdersOf(sn);const cm=colorMap(hs);const W=$("barEnd").clientWidth||600;
   const seg=o=>hs.filter(h=>(o[h]||0)>.0005).map(h=>{const w=o[h]*100,px=w*W/100;
-    const lab=px>80?`<strong>${nf1.format(w)} %</strong><span>${short(h)}</span>`:(px>26?`<strong>${Math.round(w)}</strong>`:"");
-    return `<div class="seg-b" style="flex:0 0 ${w}%;background:${cm[h]}" title="${h} : ${nf1.format(w)} %">${lab}</div>`;}).join("");
+    const lab=px>80?`<strong>${nf1.format(w)}%</strong><span>${short(h)}</span>`:(px>26?`<strong>${Math.round(w)}</strong>`:"");
+    return `<div class="seg-b" style="flex:0 0 ${w}%;background:${cm[h]}" title="${h}: ${nf1.format(w)}%">${lab}</div>`;}).join("");
   $("barStart").innerHTML=seg(start);$("barEnd").innerHTML=seg(s.own);
-  setTxt("endLabel",`Après ${s.stage==="Pré-seed"?"le pré-seed":"la "+s.stage} · société de ${nf1.format(s.month/12)} an(s) · ${UI.ref}`);
+  setTxt("endLabel",`After ${s.stage} · company aged ${nf1.format(s.month/12)} yr · ${UI.ref}`);
   setTxt("endPost","post-money "+money(s.post));
   $("legend").innerHTML=hs.filter(h=>(s.own[h]||0)>.0005||start[h]).map(h=>`<span style="--c:${cm[h]}">${h}</span>`).join("");
   const tgt=TARGETS[S.sector][s.stage];
   $("kpis").innerHTML=FN.map(f=>`<div class="kpi" style="--c:${cm[f]}"><div class="s">${f}</div><div class="n">${pc(s.own[f]||0)}</div>
-    <div class="s">départ ${pc(start[f])} · papier ${money((s.own[f]||0)*(isNaN(s.post)?0:s.post))}</div></div>`).join("")+
-    `<div class="kpi" style="--c:${css("--ink")}"><div class="s">Founders total</div><div class="n">${pc(fTot(s))}</div><div class="s">${tgt?"médiane Carta "+pc(tgt):"pool "+pc(s.own[POOL]||0)}</div></div>`;}
+    <div class="s">start ${pc(start[f])} · paper ${money((s.own[f]||0)*(isNaN(s.post)?0:s.post))}</div></div>`).join("")+
+    `<div class="kpi" style="--c:${css("--ink")}"><div class="s">Founders total</div><div class="n">${pc(fTot(s))}</div><div class="s">${tgt?"Carta median "+pc(tgt):"pool "+pc(s.own[POOL]||0)}</div></div>`;}
 function renderLinesMarker(){if(!hasPlotly()||UI.tab!=="cap")return;const x=P_PATHS[UI.ref].map(s=>s.stage);
   const shp=[{type:"line",xref:"x",yref:"paper",x0:x[UI.stage],x1:x[UI.stage],y0:0,y1:1,line:{color:css("--muted"),width:1,dash:"dot"}}];
   ["chLines","chArea"].forEach(id=>{if($(id).data)Plotly.relayout(id,{shapes:shp});});}
 function renderCap(){const sn=P_PATHS[UI.ref];const hs=holdersOf(sn);const cm=colorMap(hs);const x=sn.map(s=>s.stage);
   if(hasPlotly()){
-    const tr=FN.map(f=>({x,y:sn.map(s=>(s.own[f]||0)*100),name:f,type:"scatter",mode:"lines+markers",line:{color:cm[f],width:3},hovertemplate:f+" : %{y:.1f} %<extra></extra>"}));
-    tr.push({x,y:sn.map(s=>fTot(s)*100),name:"Founders total",type:"scatter",mode:"lines+markers",line:{color:css("--ink"),width:2,dash:"dash"},hovertemplate:"Founders : %{y:.1f} %<extra></extra>"});
-    const tx=x.filter(s=>TARGETS[S.sector][s]);tr.push({x:tx,y:tx.map(s=>TARGETS[S.sector][s]*100),name:"Médiane Carta",type:"scatter",mode:"markers",marker:{symbol:"diamond-open",size:11,color:css("--ink")},hovertemplate:"Carta : %{y:.1f} %<extra></extra>"});
-    Plotly.react("chLines",tr,baseLayout({height:380,yaxis:{ticksuffix:" %",gridcolor:css("--line"),rangemode:"tozero"},legend:{orientation:"h",y:-0.22}}),CFG);
-    Plotly.react("chArea",hs.map(h=>({x,y:sn.map(s=>(s.own[h]||0)*100),name:h,stackgroup:"one",type:"scatter",line:{width:.5,color:cm[h]},fillcolor:cm[h],hovertemplate:h+" : %{y:.1f} %<extra></extra>"})),
-      baseLayout({height:380,showlegend:false,margin:{l:44,r:30,t:10,b:36},yaxis:{range:[0,100],ticksuffix:" %",gridcolor:css("--line")}}),CFG);
+    const tr=FN.map(f=>({x,y:sn.map(s=>(s.own[f]||0)*100),name:f,type:"scatter",mode:"lines+markers",line:{color:cm[f],width:3},hovertemplate:f+": %{y:.1f}%<extra></extra>"}));
+    tr.push({x,y:sn.map(s=>fTot(s)*100),name:"Founders total",type:"scatter",mode:"lines+markers",line:{color:css("--ink"),width:2,dash:"dash"},hovertemplate:"Founders: %{y:.1f}%<extra></extra>"});
+    const tx=x.filter(s=>TARGETS[S.sector][s]);tr.push({x:tx,y:tx.map(s=>TARGETS[S.sector][s]*100),name:"Carta median",type:"scatter",mode:"markers",marker:{symbol:"diamond-open",size:11,color:css("--ink")},hovertemplate:"Carta: %{y:.1f}%<extra></extra>"});
+    Plotly.react("chLines",tr,baseLayout({height:380,yaxis:{ticksuffix:"%",gridcolor:css("--line"),rangemode:"tozero"},legend:{orientation:"h",y:-0.22}}),CFG);
+    Plotly.react("chArea",hs.map(h=>({x,y:sn.map(s=>(s.own[h]||0)*100),name:h,stackgroup:"one",type:"scatter",line:{width:.5,color:cm[h]},fillcolor:cm[h],hovertemplate:h+": %{y:.1f}%<extra></extra>"})),
+      baseLayout({height:380,showlegend:false,margin:{l:44,r:30,t:10,b:36},yaxis:{range:[0,100],ticksuffix:"%",gridcolor:css("--line")}}),CFG);
     renderLinesMarker();}
   let t=`<table><tr><th></th>${x.map(s=>`<th>${s}</th>`).join("")}</tr>`;
   hs.forEach(h=>{t+=`<tr><td><span class="dot" style="--c:${cm[h]}"></span>${h}</td>${sn.map(s=>`<td>${s.own[h]?pc(s.own[h]):"—"}</td>`).join("")}</tr>`;});
-  t+=`<tr><td><b>Post-money</b></td>${sn.map(s=>`<td><b>${money(s.post)}</b></td>`).join("")}</tr><tr><td>Levé</td>${sn.map(s=>`<td>${money(s.raised)}</td>`).join("")}</tr>`;
-  t+=`<tr><td>Préférences cumulées</td>${sn.map(s=>`<td>${money(Object.values(s.invested).reduce((a,b)=>a+b,0))}</td>`).join("")}</tr><tr><td>Âge (ans)</td>${sn.map(s=>`<td>${nf1.format(s.month/12)}</td>`).join("")}</tr></table>`;
+  t+=`<tr><td><b>Post-money</b></td>${sn.map(s=>`<td><b>${money(s.post)}</b></td>`).join("")}</tr><tr><td>Raised</td>${sn.map(s=>`<td>${money(s.raised)}</td>`).join("")}</tr>`;
+  t+=`<tr><td>Cumulative preferences</td>${sn.map(s=>`<td>${money(Object.values(s.invested).reduce((a,b)=>a+b,0))}</td>`).join("")}</tr><tr><td>Age (years)</td>${sn.map(s=>`<td>${nf1.format(s.month/12)}</td>`).join("")}</tr></table>`;
   $("capTbl").innerHTML=t;
-  $("fricNote").textContent=S.path_mode===PATHS[0]?"« Bridges, extensions, autres tours » : dilution ajoutée à chaque tour pour retrouver les médianes Carta (structure de référence du secteur) : "+RS.filter(s=>x.includes(s)).map(s=>s+" "+pc(S.frictions[s]||0)).join(", ")+". Vos choix (SAFE, pool, bridge…) s'appliquent par-dessus.":"Parcours propre : seulement les tours principaux, sans bridges ni extensions cachés.";}
-function stakeOf(s,w){const o=w==="Tous les founders"?fTot(s):(s.own[w]||0);return o*(isNaN(s.post)?0:s.post)*fxv();}
+  $("fricNote").textContent=S.path_mode===PATHS[0]?"\"Bridges, extensions, other rounds\": dilution added at each round to match Carta medians (sector reference structure): "+RS.filter(s=>x.includes(s)).map(s=>s+" "+pc(S.frictions[s]||0)).join(", ")+". Your choices (SAFE, pool, bridge…) apply on top.":"Clean path: main rounds only, no hidden bridges or extensions.";}
+function stakeOf(s,w){const o=w==="All founders"?fTot(s):(s.own[w]||0);return o*(isNaN(s.post)?0:s.post)*fxv();}
 function renderVal(){const xs=P_PATHS.P50.map(s=>s.stage);const v={};PK.forEach(p=>v[p]=P_PATHS[p].map(s=>stakeOf(s,UI.who)));
-  const col=css(FCOL[UI.who]||"--ink");const unit=" M"+UI.cur;
+  const col=css(FCOL[UI.who]||"--ink");const unit="M "+UI.cur;
   const band=(lo,hi,op,name)=>[{x:xs,y:v[hi],mode:"lines",line:{width:0},showlegend:false,hoverinfo:"skip",type:"scatter"},{x:xs,y:v[lo],fill:"tonexty",fillcolor:hexA(col,op),mode:"lines",line:{width:0},name,hoverinfo:"skip",type:"scatter"}];
-  const lines=[["P10","dot"],["P25","dash"],["P50","solid"],["P75","dash"],["P90","dot"]].map(([p,d])=>({x:xs,y:v[p],name:p,type:"scatter",mode:"lines",line:{color:col,dash:d,width:p==="P50"?3:1.2},hovertemplate:p+" : %{y:,.1f}"+unit+"<extra></extra>"}));
+  const lines=[["P10","dot"],["P25","dash"],["P50","solid"],["P75","dash"],["P90","dot"]].map(([p,d])=>({x:xs,y:v[p],name:p,type:"scatter",mode:"lines",line:{color:col,dash:d,width:p==="P50"?3:1.2},hovertemplate:p+": %{y:,.1f}"+unit+"<extra></extra>"}));
   if(hasPlotly())Plotly.react("chFan",[...band("P10","P90",.12,"P10–P90"),...band("P25","P75",.28,"P25–P75"),...lines],baseLayout({height:420,yaxis:logAxis()}),CFG);
   let t=`<table><tr><th>Post-money</th>${xs.map(s=>`<th>${s}</th>`).join("")}</tr>`;PK.forEach(p=>{t+=`<tr><td>${p}</td>${P_PATHS[p].map(s=>`<td>${money(s.post)}</td>`).join("")}</tr>`;});
   $("postTbl").innerHTML=t+"</table>";}
@@ -599,25 +599,25 @@ function renderExit(){const sn=P_PATHS[UI.ref];const st=sn.map(s=>s.stage);if(!U
   $("exStage").innerHTML=st.map(s=>`<option ${s===UI.exStage?"selected":""}>${s}</option>`).join("");$("exMult").value=UI.exMult;setTxt("exmv",nf2.format(UI.exMult)+"×");
   const s=sn[st.indexOf(UI.exStage)];const post=isNaN(s.post)?0:s.post;const E=post*UI.exMult;const prefT=Object.values(s.invested).reduce((a,b)=>a+b,0)*S.pref_mult;
   const pr=proceeds(S,s,E);const cm=colorMap(FN);
-  $("exSummary").innerHTML=`Rachat à <b>${money(E)}</b>. Préférences cumulées devant les founders : <b>${money(prefT)}</b>${S.participating?" (participatives)":""}.`;
-  let t=`<table><tr><th>Founder</th><th>Part</th><th>Papier (part × prix)</th><th>Brut touché</th><th>Net après impôt (${nf1.format(S.tax*100)} %)</th></tr>`;
+  $("exSummary").innerHTML=`Acquisition at <b>${money(E)}</b>. Cumulative preferences ahead of founders: <b>${money(prefT)}</b>${S.participating?" (participating)":""}.`;
+  let t=`<table><tr><th>Founder</th><th>Stake</th><th>Paper (stake × price)</th><th>Gross received</th><th>Net after tax (${nf1.format(S.tax*100)}%)</th></tr>`;
   FN.forEach(f=>{const g=pr[f]||0;t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td>${pc(s.own[f]||0)}</td><td>${money((s.own[f]||0)*E)}</td><td><b>${money(g)}</b></td><td>${money(g*(1-S.tax))}</td></tr>`;});
   $("exTbl").innerHTML=t+"</table>";
   if(!hasPlotly())return;const grid=[];for(let i=1;i<=120;i++)grid.push(post*3*i/120);
-  const tr=[];FN.forEach(f=>{tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(proceeds(S,s,e)[f]||0)*fxv()),name:f,type:"scatter",mode:"lines",line:{color:cm[f],width:3},hovertemplate:f+" : %{y:,.1f} M"+UI.cur+"<extra></extra>"});
-    tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(s.own[f]||0)*e*fxv()),name:f+" papier",type:"scatter",mode:"lines",line:{color:cm[f],width:1,dash:"dot"},showlegend:false,hoverinfo:"skip"});});
-  Plotly.react("chExit",tr,baseLayout({height:420,xaxis:{title:{text:"Prix de rachat (M"+UI.cur+")"},gridcolor:css("--line")},yaxis:{title:{text:"M"+UI.cur},gridcolor:css("--line")},
+  const tr=[];FN.forEach(f=>{tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(proceeds(S,s,e)[f]||0)*fxv()),name:f,type:"scatter",mode:"lines",line:{color:cm[f],width:3},hovertemplate:f+": %{y:,.1f} M"+UI.cur+"<extra></extra>"});
+    tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(s.own[f]||0)*e*fxv()),name:f+" paper",type:"scatter",mode:"lines",line:{color:cm[f],width:1,dash:"dot"},showlegend:false,hoverinfo:"skip"});});
+  Plotly.react("chExit",tr,baseLayout({height:420,xaxis:{title:{text:"Acquisition price ("+UI.cur+"M)"},gridcolor:css("--line")},yaxis:{title:{text:UI.cur+"M"},gridcolor:css("--line")},
     shapes:[{type:"line",x0:prefT*fxv(),x1:prefT*fxv(),y0:0,y1:1,yref:"paper",line:{color:css("--fut"),dash:"dash",width:1.5}},{type:"line",x0:E*fxv(),x1:E*fxv(),y0:0,y1:1,yref:"paper",line:{color:css("--ink"),width:1}}],
-    annotations:[{x:prefT*fxv(),y:1,yref:"paper",text:"préférences",showarrow:false,xanchor:"left",font:{color:css("--fut"),size:11}}]}),CFG);}
+    annotations:[{x:prefT*fxv(),y:1,yref:"paper",text:"preferences",showarrow:false,xanchor:"left",font:{color:css("--fut"),size:11}}]}),CFG);}
 function renderSc(){const rows=variants(S).map(([g,l,q])=>{const sp=paths(q);const e=sp[UI.ref].at(-1),e25=sp.P25.at(-1);
     const h=proceeds(q,e,e.post*.5);return {g,l,e,e25,h};});const cm=colorMap(FN);
-  let t=`<table><tr><th>Scénario</th>${FN.map(f=>`<th>${short(f)}</th>`).join("")}<th>Founders</th><th>@P25</th><th>CTO papier</th><th>CTO rachat 0,5×</th><th>CEO rachat 0,5×</th></tr>`;
+  let t=`<table><tr><th>Scenario</th>${FN.map(f=>`<th>${short(f)}</th>`).join("")}<th>Founders</th><th>@P25</th><th>CTO paper</th><th>CTO acq. 0.5×</th><th>CEO acq. 0.5×</th></tr>`;
   let lg="";rows.forEach(r=>{if(r.g!==lg){t+=`<tr class="grp"><td colspan="10">${r.g}</td></tr>`;lg=r.g;}
     t+=`<tr><td>${r.l}</td>${FN.map(f=>`<td>${pc(r.e.own[f]||0)}</td>`).join("")}<td><b>${pc(fTot(r.e))}</b></td><td>${pc(fTot(r.e25))}</td><td>${money(r.e.own.CTO*r.e.post)}</td><td>${money(r.h.CTO||0)}</td><td>${money(r.h.CEO||0)}</td></tr>`;});
   $("scTbl").innerHTML=t+"</table>";const labs=rows.map(r=>r.l);
-  if(hasPlotly())Plotly.react("chSc",FN.map(f=>({type:"bar",orientation:"h",y:labs,x:rows.map(r=>(r.e.own[f]||0)*100),name:f,marker:{color:cm[f]},hovertemplate:f+" : %{x:.1f} %<extra></extra>"})),
-    baseLayout({height:30*labs.length+110,barmode:"stack",margin:{l:210,r:12,t:10,b:40},legend:{orientation:"h",y:-0.1,traceorder:"normal"},xaxis:{ticksuffix:" %",gridcolor:css("--line")},yaxis:{autorange:"reversed"},hovermode:"y unified"}),CFG);
-  let s=`<table><tr><th>Répartition</th>${FN.map(f=>`<th>${short(f)}</th>`).join("")}<th>CTO P25</th><th>CTO P50</th><th>CTO P75</th><th>CEO P50</th><th>Chief Sci. P50</th></tr>`;
+  if(hasPlotly())Plotly.react("chSc",FN.map(f=>({type:"bar",orientation:"h",y:labs,x:rows.map(r=>(r.e.own[f]||0)*100),name:f,marker:{color:cm[f]},hovertemplate:f+": %{x:.1f}%<extra></extra>"})),
+    baseLayout({height:30*labs.length+110,barmode:"stack",margin:{l:210,r:12,t:10,b:40},legend:{orientation:"h",y:-0.1,traceorder:"normal"},xaxis:{ticksuffix:"%",gridcolor:css("--line")},yaxis:{autorange:"reversed"},hovermode:"y unified"}),CFG);
+  let s=`<table><tr><th>Split</th>${FN.map(f=>`<th>${short(f)}</th>`).join("")}<th>CTO P25</th><th>CTO P50</th><th>CTO P75</th><th>CEO P50</th><th>Chief Sci. P50</th></tr>`;
   Object.entries(SPLITS).forEach(([name,arr])=>{const q=clone(S);FN.forEach((f,i)=>q.founders[f]=arr[i]);const sp=paths(q);const e=sp[UI.ref].at(-1);
     const val=(p,f)=>{const l=sp[p].at(-1);return money((l.own[f]||0)*l.post);};
     s+=`<tr><td>${name}</td>${FN.map(f=>`<td>${pc(e.own[f]||0)}</td>`).join("")}<td>${val("P25","CTO")}</td><td>${val("P50","CTO")}</td><td>${val("P75","CTO")}</td><td>${val("P50","CEO")}</td><td>${val("P50","Chief Scientist")}</td></tr>`;});
@@ -625,37 +625,37 @@ function renderSc(){const rows=variants(S).map(([g,l,q])=>{const sp=paths(q);con
 let mcT=null,mcKey="",MC=null;
 function renderMc(){clearTimeout(mcT);mcT=setTimeout(()=>{const key=JSON.stringify([S,UI.mc_n,UI.mc_rho,UI.mc_ql]);
   if(key!==mcKey){MC=monteCarlo(S,UI.mc_n,UI.mc_rho,UI.mc_ql);mcKey=key;}const n=MC.n;const cnt={};MC.outcome.forEach(o=>cnt[o]=(cnt[o]||0)+1);
-  const stg=P_PATHS.P50.map(s=>s.stage);const order=[];stg.forEach(s=>["Rachat","Sortie","Échec"].forEach(k=>{const o=k+" après "+s;if(cnt[o])order.push(o);}));
-  if(hasPlotly())Plotly.react("chOut",[{type:"bar",orientation:"h",y:order,x:order.map(o=>cnt[o]/n*100),text:order.map(o=>nf1.format(cnt[o]/n*100)+" %"),textposition:"outside",
-    marker:{color:order.map(o=>o.startsWith("Échec")?css("--line"):(o.startsWith("Rachat")?css("--ceo"):css("--cto")))},hovertemplate:"%{y} : %{x:.1f} %<extra></extra>"}],
-    baseLayout({height:28*order.length+70,margin:{l:150,r:50,t:10,b:30},xaxis:{ticksuffix:" %",gridcolor:css("--line")},yaxis:{autorange:"reversed"},hovermode:"closest"}),CFG);
-  const cm=colorMap(FN);let t=`<table><tr><th>Founder</th><th>Touche quelque chose</th><th>Net > 1 M${UI.cur}</th><th>Espérance nette</th><th>Médiane nette si > 0</th><th>P90 net si > 0</th></tr>`;
+  const stg=P_PATHS.P50.map(s=>s.stage);const order=[];stg.forEach(s=>["Acquisition","Exit","Failure"].forEach(k=>{const o=k+" after "+s;if(cnt[o])order.push(o);}));
+  if(hasPlotly())Plotly.react("chOut",[{type:"bar",orientation:"h",y:order,x:order.map(o=>cnt[o]/n*100),text:order.map(o=>nf1.format(cnt[o]/n*100)+"%"),textposition:"outside",
+    marker:{color:order.map(o=>o.startsWith("Failure")?css("--line"):(o.startsWith("Acquisition")?css("--ceo"):css("--cto")))},hovertemplate:"%{y}: %{x:.1f}%<extra></extra>"}],
+    baseLayout({height:28*order.length+70,margin:{l:150,r:50,t:10,b:30},xaxis:{ticksuffix:"%",gridcolor:css("--line")},yaxis:{autorange:"reversed"},hovermode:"closest"}),CFG);
+  const cm=colorMap(FN);let t=`<table><tr><th>Founder</th><th>Gets anything</th><th>Net > ${UI.cur}1M</th><th>Expected net</th><th>Median net if > 0</th><th>P90 net if > 0</th></tr>`;
   FN.forEach(f=>{const g=Array.from(MC.gross[f]);const pos=g.filter(x=>x>0);const net=x=>x*(1-S.tax);
     t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td>${pc(pos.length/n)}</td><td>${pc(g.filter(x=>net(x)*fxv()>1).length/n)}</td><td><b>${money(net(g.reduce((a,b)=>a+b,0)/n))}</b></td><td>${pos.length?money(net(pctl(pos,50))):"—"}</td><td>${pos.length?money(net(pctl(pos,90))):"—"}</td></tr>`;});
-  $("mcTbl").innerHTML=t+`</table><p class="note">Espérance nette = moyenne sur toutes les simulations, échecs compris. Elle est tirée par quelques très grosses sorties : la médiane est presque toujours zéro.</p>`;
+  $("mcTbl").innerHTML=t+`</table><p class="note">Expected net = average over all simulations, failures included. It is driven by a few very large exits: the median is almost always zero.</p>`;
   const w=UI.whoMc;const pos=Array.from(MC.gross[w]).filter(x=>x>0).map(x=>Math.log10(x*(1-S.tax)*fxv()));
-  setTxt("mcHistTitle","Net touché par "+w+", dans les cas où il touche quelque chose");
+  setTxt("mcHistTitle","Net received by "+w+", when they get anything");
   if(hasPlotly()){const ticks=[-2,-1,0,1,2,3];Plotly.react("chHist",[{type:"histogram",x:pos,nbinsx:40,marker:{color:css(FCOL[w])},hovertemplate:"%{y} simulations<extra></extra>"}],
     baseLayout({height:300,hovermode:"closest",xaxis:{tickvals:ticks,ticktext:ticks.map(t=>money(Math.pow(10,t)/fxv())),gridcolor:css("--line")}}),CFG);}},120);}
-function renderSrc(){const rows=[["Post-money et dilution médians par tour","Carta, logiciels US, 6 mois à juillet 2026","Donnée"],
-  ["Prime IA : +38 % en A, +193 % en E+","Carta, State of Private Markets 2025","Donnée"],["Multiplicateurs IA / non-IA par tour","Interpolation Carta et PitchBook","Estim."],
-  ["Coefficients Europe","Atomico, PitchBook Europe","Estim."],["Dispersion σ (P90 seed ≈ 4× médiane)","Carta T1 2026, T2 2025","Donnée + estim."],
-  ["SAFE : 93 % des pré-seed, 91 % post-money","Carta T2 2026","Donnée"],["Caps médians de SAFE selon le montant","Carta 2025 et T2 2026","Donnée"],
-  ["Pool : ~10 % au départ puis +1 à 1,5 pt par tour","Carta","Donnée"],["Part médiane des founders : 56 / 36 / 23 / 16,1 % (seed, A, B, C) ; IA en B : 27,3 %","Carta Founder Ownership Report 2026","Donnée"],
-  ["Cibles IA en C et D, non-IA en C et D","Extrapolation","Estim."],["Âge au tour : 1,3 / 2,8 / 4,7 / 6,2 / 8,3 ans","Carta 2025","Donnée"],
-  ["Passage au tour suivant","Carta (15-35 % des seed atteignent la B) ; pré-seed → seed","Donnée + estim."],["Probabilités et prix de rachat","Calés sur Carta (~5-6 % d'une cohorte seed rachetée avant la B)","Estim."],
-  ["Sortie après le dernier tour","—","Estim."],["Préférence 1x non participative","Cooley T2 2025 : 98 % des tours en 1x, 95 % non participatifs","Donnée"],
-  ["PFU 31,4 % (12,8 % IR + 18,6 % PS)","LFSS 2026","Donnée"]];
-  $("srcTbl").innerHTML=`<table><tr><th>Hypothèse</th><th>Source</th><th>Statut</th></tr>${rows.map(r=>`<tr><td style="white-space:normal">${r[0]}</td><td style="white-space:normal;text-align:left">${r[1]}</td><td><span class="badge ${r[2]==="Donnée"?"ok":"est"}">${r[2]}</span></td></tr>`).join("")}</table>`;
-  const d=stageDefaults(S.sector,S.region);let t=`<table><tr><th>Tour</th><th>Post-money</th><th>Dilution</th><th>Pool après</th><th>σ</th><th>Suivant</th><th>Âge</th><th>Bridges (historique)</th><th>Cible Carta</th></tr>`;
-  RS.forEach(s=>{const r=d.rounds[s];t+=`<tr><td>${s}</td><td>${money(r.post)}</td><td>${pc(r.dil)}</td><td>${pc(r.pool)}</td><td>${nf2.format(r.sigma)}</td><td>${r.grad?pc(r.grad):"—"}</td><td>${nf1.format(r.month/12)} ans</td><td>${pc(S.frictions[s]||0)}</td><td>${pc(TARGETS[S.sector][s])}</td></tr>`;});
+function renderSrc(){const rows=[["Median post-money and dilution by round","Carta, US software, 6 months to July 2026","Data"],
+  ["AI premium: +38% at Series A, +193% at E+","Carta, State of Private Markets 2025","Data"],["AI / non-AI multipliers by round","Interpolated from Carta and PitchBook","Est."],
+  ["Europe coefficients","Atomico, PitchBook Europe","Est."],["Spread σ (seed P90 ≈ 4× median)","Carta Q1 2026, Q2 2025","Data + est."],
+  ["SAFEs: 93% of pre-seed, 91% post-money","Carta Q2 2026","Data"],["Median SAFE caps by amount raised","Carta 2025 and Q2 2026","Data"],
+  ["Pool: ~10% at start, then +1 to 1.5 pts per round","Carta","Data"],["Median founder ownership: 56 / 36 / 23 / 16.1% (seed, A, B, C); AI at B: 27.3%","Carta Founder Ownership Report 2026","Data"],
+  ["AI targets at C and D, non-AI at C and D","Extrapolation","Est."],["Age at round: 1.3 / 2.8 / 4.7 / 6.2 / 8.3 years","Carta 2025","Data"],
+  ["Graduation to next round","Carta (15-35% of seed companies reach B); pre-seed → seed","Data + est."],["Acquisition probabilities and prices","Calibrated on Carta (~5-6% of a seed cohort acquired before B)","Est."],
+  ["Exit after the last round","—","Est."],["1x non-participating preference","Cooley Q2 2025: 98% of rounds 1x, 95% non-participating","Data"],
+  ["French flat tax 31.4% (12.8% income tax + 18.6% social charges)","LFSS 2026","Data"]];
+  $("srcTbl").innerHTML=`<table><tr><th>Assumption</th><th>Source</th><th>Status</th></tr>${rows.map(r=>`<tr><td style="white-space:normal">${r[0]}</td><td style="white-space:normal;text-align:left">${r[1]}</td><td><span class="badge ${r[2]==="Data"?"ok":"est"}">${r[2]}</span></td></tr>`).join("")}</table>`;
+  const d=stageDefaults(S.sector,S.region);let t=`<table><tr><th>Round</th><th>Post-money</th><th>Dilution</th><th>Pool after</th><th>σ</th><th>Next round</th><th>Age</th><th>Bridges (history)</th><th>Carta target</th></tr>`;
+  RS.forEach(s=>{const r=d.rounds[s];t+=`<tr><td>${s}</td><td>${money(r.post)}</td><td>${pc(r.dil)}</td><td>${pc(r.pool)}</td><td>${nf2.format(r.sigma)}</td><td>${r.grad?pc(r.grad):"—"}</td><td>${nf1.format(r.month/12)} yrs</td><td>${pc(S.frictions[s]||0)}</td><td>${pc(TARGETS[S.sector][s])}</td></tr>`;});
   $("defTbl").innerHTML=t+"</table>";}
 function renderTab(){({cap:renderCap,val:renderVal,exit:renderExit,sc:renderSc,mc:renderMc,src:renderSrc})[UI.tab]();}
 function update(){syncControls();P_PATHS=paths(S);renderHero();renderTab();}
 
 if(window.innerWidth<980)$("mktDetails").open=false;
 buildControls();wire();update();
-if(!hasPlotly())document.querySelectorAll(".chart").forEach(c=>c.innerHTML='<p class="note">Les graphiques n\'ont pas pu se charger. Les tableaux restent à jour.</p>');
+if(!hasPlotly())document.querySelectorAll(".chart").forEach(c=>c.innerHTML='<p class="note">Charts could not load. Tables stay up to date.</p>');
 </script>
 
 </body>
