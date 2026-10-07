@@ -107,6 +107,53 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 
 .langsw{display:inline-flex;margin-bottom:8px}.langsw button{flex:0 0 auto;padding:4px 14px;font-weight:600}
 
+.hdr-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.hdr-top .langsw,.hdr-top .lang{margin-bottom:0}
+.btn.sm{padding:5px 10px;font-size:.84rem}
+.presets{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.plabel{font-weight:700;margin-bottom:8px}
+.pbtns{display:flex;flex-wrap:wrap;gap:6px}
+.ctl hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.ctl select{margin-top:2px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:.88rem;z-index:80;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 6px}
+.fairT input{width:56px;padding:4px 6px}
+.fairT td.crit{white-space:normal;min-width:180px;text-align:left;font-variant-numeric:normal}
+.cmpIn{display:flex;flex-wrap:wrap;gap:10px;margin:4px 6px 10px}
+.cmpIn label{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted);gap:2px}
+.cmpIn input{width:76px;padding:4px 6px}
+#cmpCard{padding:10px 14px}
+#printSum{display:none}
+.drawer-btn,.drawer-close{display:none}
+.drawer-bg{position:fixed;inset:0;background:rgba(10,20,30,.38);z-index:39}
+.drawer-bg[hidden]{display:none}
+@media (max-width:979px){
+  aside#controls{position:fixed;top:0;bottom:0;left:0;width:min(90vw,380px);z-index:40;background:var(--paper);overflow:auto;padding:14px 12px 80px;
+    transform:translateX(-105%);transition:transform .25s ease;box-shadow:0 0 40px rgba(0,0,0,.25);max-height:none}
+  body.drawer-open aside#controls{transform:none}
+  .drawer-btn{display:block;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:38;border:0;border-radius:999px;padding:12px 18px;font:inherit;font-weight:700;background:var(--ink);color:var(--paper);box-shadow:0 6px 20px rgba(0,0,0,.25);cursor:pointer}
+  .drawer-close{display:block;margin:0 0 10px auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:38px;font-size:1.3rem;cursor:pointer}
+  body.drawer-open{overflow:hidden}
+}
+@media (prefers-reduced-motion: reduce){aside#controls{transition:none}.toast{transition:none}}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff;color:#111}
+  body>*:not(#printSum){display:none!important}
+  #printSum{display:block;font-size:11px;color:#111}
+  #printSum h1{font-size:20px;margin:0 0 4px}
+  #printSum h2{font-size:13px;margin:16px 0 6px;border-bottom:1px solid #ccc;padding-bottom:3px}
+  #printSum table{width:100%;border-collapse:collapse;font-size:10.5px}
+  #printSum th,#printSum td{border-bottom:1px solid #e3e3e3;padding:3px 5px;text-align:right}
+  #printSum th:first-child,#printSum td:first-child{text-align:left}
+  .pmeta{color:#555;margin:0 0 10px}
+  .plabel2{font-size:10px;color:#555;margin:6px 0 2px}
+  .pbar{display:flex;height:18px;border-radius:4px;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pbar span{color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pdisc{margin-top:14px;color:#666;font-size:9.5px}
+}
+
 .gl{text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,var(--ceo) 60%,transparent);cursor:help;border-radius:3px;transition:background .15s}
 .gl:hover,.gl[aria-expanded=true]{background:color-mix(in srgb,var(--ceo) 12%,transparent)}
 .gl:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
@@ -120,18 +167,24 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 .glk{display:block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cto);margin-bottom:1px}
 .glm{display:inline-block;margin-top:8px;padding:0;border:0;background:none;font:inherit;font-weight:600;color:var(--ceo);text-decoration:none;cursor:pointer}
 .glm:hover{text-decoration:underline}
+.glw-wrap{display:inline}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
+  <div class="hdr-top">
   <div class="seg langsw" role="group" aria-label="Language"><button data-lang="fr" data-href="./" lang="fr" aria-pressed="false">FR</button><button data-lang="en" data-href="en.html" lang="en" aria-pressed="true">EN</button></div>
+  <button class="btn sm" id="shareBtn" type="button"></button><button class="btn sm" id="printBtn" type="button"></button>
+  </div>
   <h1>AgentPeer: who owns what, and who gets what</h1>
   <p>From pre-seed to Series C: step through the rounds to watch the cap table move, then see what each founder would actually take home in an acquisition, after preferences and tax. Defaults calibrated on Carta, PitchBook and Cooley 2025-2026 data for AI infrastructure.</p>
 </header>
 
 <div class="grid">
 <aside id="controls">
+  <button class="drawer-close" id="drawerClose" type="button">×</button>
+  <div class="presets" id="presetCtl"></div>
   <details open>
     <summary>Starting split</summary>
     <div class="ctl" id="founderCtl"></div>
@@ -156,6 +209,7 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
       <div class="row"><label>Instrument</label><div class="seg" data-seg="preseed_mode"><button data-v="SAFE">SAFE</button><button data-v="Priced">Priced</button><button data-v="None">None</button></div></div>
       <div class="row"><label>Amount ($M)</label><input type="number" id="pa" step="0.1" min="0.1"></div>
       <div class="row"><label>Cap / post-money ($M)</label><input type="number" id="pc" step="0.5" min="1"></div>
+      <div class="row" id="floorRow"></div>
       <p class="note" id="pdil"></p>
     </div>
   </details>
@@ -193,12 +247,17 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
       <p class="note">Good leaver: keeps the vested part. Bad leaver: bought back at nominal, modeled as a total loss. Shares taken back are cancelled and benefit everyone pro rata.</p>
     </div>
   </details>
+  <details id="eventsCtl">
+    <summary>Events along the way</summary>
+    <div class="ctl" id="eventsBody"></div>
+  </details>
   <details>
     <summary>Exit and tax</summary>
     <div class="ctl">
       <div class="row"><label>Liquidation preference</label><div class="seg" data-seg="pref_mult"><button data-v="1">1x</button><button data-v="1.5">1.5x</button><button data-v="2">2x</button></div></div>
       <label class="chk"><input type="checkbox" id="participating"> Participating</label>
       <div class="row"><label>Preference seniority</label><div class="seg" data-seg="seniority"><button data-v="pari passu">Pari passu</button><button data-v="stacked">Stacked</button></div></div>
+      <div class="row" id="taxModeRow"></div>
       <div class="row"><label>Capital gains tax <b id="txv"></b></label><input type="range" id="tax" min="0" max="45" step="0.2"></div>
       <p class="note">French flat tax (PFU) 2026: 31.4%. Add the high-income surtax (CEHR, 3-4%) for large amounts.</p>
       <div class="row"><label>Final exit, × last post-money (est.) <b id="tmv"></b></label><input type="range" id="term_mult" min="0.3" max="4" step="0.1"></div>
@@ -213,6 +272,7 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
     <summary>Share this scenario</summary>
     <div class="ctl">
       <p class="note">Copy the code and send it to your co-founders; they paste it here to get exactly the same settings.</p>
+      <button class="btn" id="copyLink" type="button"></button>
       <button class="btn" id="copyCode">Copy scenario code</button>
       <div class="row"><textarea id="codeIn" rows="3" placeholder="Paste a scenario code"></textarea></div>
       <button class="btn" id="loadCode">Load this code</button>
@@ -239,6 +299,7 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 
   <nav class="tabs" role="tablist">
     <button role="tab" data-tab="cap" aria-selected="true">Over time</button>
+    <button role="tab" data-tab="fair">Fair split</button>
     <button role="tab" data-tab="val">Paper value</button>
     <button role="tab" data-tab="exit">Exit</button>
     <button role="tab" data-tab="sc">Scenarios</button>
@@ -247,12 +308,15 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
   </nav>
 
   <div class="panel on" id="p-cap">
+    <div class="card" id="cmpCard"></div>
     <div class="card"><h3>Each founder's stake, round by round</h3><div class="chart" id="chLines"></div>
       <p class="note">Diamonds: median founding-team ownership measured by Carta after each round.</p></div>
     <div class="card"><h3>Fully diluted, as-converted cap table</h3><div class="chart" id="chArea"></div></div>
     <div class="card tbl" id="capTbl"></div>
     <p class="note" id="fricNote"></p>
   </div>
+
+  <div class="panel" id="p-fair"></div>
 
   <div class="panel" id="p-val">
     <div class="row" style="max-width:320px"><label>Who?</label><select id="who"></select></div>
@@ -310,13 +374,17 @@ textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:va
 </div>
 </div>
 
+<section id="printSum" aria-hidden="true"></section>
+<button class="drawer-btn" id="drawerBtn" type="button" aria-controls="controls" aria-expanded="false"></button>
+<div class="drawer-bg" id="drawerBg" hidden></div>
 <script>
 // ============================================================ model (same as model.py)
 const STAGES=["Pre-seed","Seed","Series A","Series B","Series C","Series D"];
 const RS=STAGES.slice(1);
 const POOL="Employee pool (ESOP)",FRICTION="Bridges, extensions, other rounds",FUT="Future founder (CMO)";
 const FN=["CTO","CEO","Chief Scientist",FUT];
-const FDEF={"CTO":45,"CEO":25,"Chief Scientist":25,[FUT]:5};
+const FDEF={"CTO":34,"CEO":33,"Chief Scientist":33,[FUT]:0};
+const SECOND="Secondary (investors)";
 const BASE={
  "Seed":{post:24.3,dil:.18,sigma:1.05,pool:.12,grad:.35,dil_sd:.05,month:16,p_acq:.04,acq_mult:.6},
  "Series A":{post:80,dil:.18,sigma:.75,pool:.135,grad:.50,dil_sd:.05,month:34,p_acq:.05,acq_mult:.8},
@@ -329,7 +397,8 @@ const SECTORS={
  "AI app / agentic infra":{mult:[1.15,1.15,1.15,1.25,1.40,1.60],dil:-.01},
  "Market average (AI + non-AI)":{mult:[1,1,1,1,1,1],dil:0},
  "Non-AI software":{mult:[.85,.85,.83,.80,.70,.60],dil:.015}};
-const REGIONS={"US (Carta baseline)":{mult:[1,1,1,1,1,1],dil:0},"Europe / France":{mult:[.60,.55,.62,.65,.70,.75],dil:.02}};
+const REGIONS={"US (Carta baseline)":{mult:[1,1,1,1,1,1],dil:0,ai:1},"Europe / France":{mult:[.45,.50,.45,.45,.45,.50],dil:.02,ai:.55}};
+const secM=(sec,reg,i)=>1+(SECTORS[sec].mult[i]-1)*REGIONS[reg].ai;
 const TARGETS={
  "AI app / agentic infra":{"Seed":.56,"Series A":.375,"Series B":.273,"Series C":.19,"Series D":.14},
  "Market average (AI + non-AI)":{"Seed":.56,"Series A":.36,"Series B":.23,"Series C":.161,"Series D":.12},
@@ -337,62 +406,84 @@ const TARGETS={
 const PCTS={P10:-1.2816,P25:-.6745,P50:0,P75:.6745,P90:1.2816};const PK=Object.keys(PCTS);
 const PATHS=["Observed history (Carta)","2026 market (clean path)"];
 const PFU=.314;
-const SPLITS={"Base 45/25/25/5":[45,25,25,5],"40/30/25/5":[40,30,25,5],"35/30/30/5":[35,30,30,5],
+const SPLITS={"34/33/33/0":[34,33,33,0],"45/25/25/5":[45,25,25,5],"40/30/25/5":[40,30,25,5],"35/30/30/5":[35,30,30,5],
  "Near-equal 32/32/31/5":[32,32,31,5],"MVP bonus: 10 + 3×30 = 40/30/30/0":[40,30,30,0],"50/20/20/10":[50,20,20,10]};
 const clone=o=>JSON.parse(JSON.stringify(o));
 const rnd=(x,d)=>Math.round(x*10**d)/10**d;
 
 function stageDefaults(sec,reg){const s=SECTORS[sec],r=REGIONS[reg],out={};
-  RS.forEach((st,i0)=>{const i=i0+1,b=BASE[st];out[st]=Object.assign({},b,{post:rnd(b.post*s.mult[i]*r.mult[i],1),
-    dil:rnd(Math.min(.35,Math.max(.03,b.dil+s.dil+r.dil)),3)});});
-  const m=s.mult[0]*r.mult[0];return {rounds:out,preseed:Object.assign({},PRE,{amount:rnd(PRE.amount*m,2),cap:rnd(PRE.cap*m+1e-9,1)})};}
-function refCap(amount,sec,reg){const c=SAFE_CAP_REF.find(([l])=>amount<=l)[1];return c*SECTORS[sec].mult[0]*REGIONS[reg].mult[0];}
+  RS.forEach((st,i0)=>{const i=i0+1,b=BASE[st];out[st]=Object.assign({},b,{post:rnd(b.post*secM(sec,reg,i)*r.mult[i],1),
+    dil:rnd(Math.min(.35,Math.max(.03,b.dil+s.dil*r.ai+r.dil)),3)});});
+  const m=secM(sec,reg,0)*r.mult[0];return {rounds:out,preseed:Object.assign({},PRE,{amount:rnd(PRE.amount*m,2),cap:rnd(PRE.cap*m+1e-9,1)})};}
+function refCap(amount,sec,reg){const c=SAFE_CAP_REF.find(([l])=>amount<=l)[1];return c*secM(sec,reg,0)*REGIONS[reg].mult[0];}
 function defaultParams(sec="AI app / agentic infra",reg="US (Carta baseline)"){const d=stageDefaults(sec,reg);
   return {founders:clone(FDEF),sector:sec,region:reg,path_mode:PATHS[0],preseed_mode:"SAFE",preseed:d.preseed,seed_mode:"Priced",
    bridge_on:true,bridge_frac:.35,bridge_cap_mult:1.5,safe_discount:0,ext_on:false,ext_dil:.05,pool_on:true,pool_initial:0,pool_mode:"pre",
    last_stage:"Series C",rounds:d.rounds,condition_preseed:true,rho0:.5,fut_mode:"reserve",fut_join_month:12,leaver:"No one",leave_month:24,
    leaver_type:"good",vest_months:48,cliff:12,vest_credit:{"CTO":0,"CEO":0,"Chief Scientist":0,[FUT]:0},pref_mult:1,participating:false,
-   seniority:"pari passu",tax:PFU,term_mult:1.2,term_sigma:1.0,term_fail:.2,acq_sigma:.9,frictions:{}};}
+   seniority:"pari passu",tax:PFU,tax_mode:"pfu",term_mult:1.2,term_sigma:1.0,term_fail:.2,acq_sigma:.9,frictions:{},
+   air_floor:0,antidil:"broad",down_stage:"No one",down_factor:.7,sec_on:false,sec_stage:"Series B",sec_pct:.1,
+   ref_who:"No one",ref_stage:"Series B",ref_pct:.02,cmp_on:false,cmp:[45,25,25,5],
+   fair:{w:[30,25,20,15,10],r:[[4,4,4,0],[4,4,4,0],[4,4,4,0],[4,4,4,0],[4,4,4,0]],past:[0,0,0,0],P:.1,incl_fut:false}};}
 function months(P){const m={"Pre-seed":P.preseed.month};RS.forEach(s=>m[s]=P.rounds[s].month);return m;}
 function preseedZ0(P){if(!P.condition_preseed||P.preseed_mode==="None")return 0;return Math.log(P.preseed.cap/refCap(P.preseed.amount,P.sector,P.region))/.7;}
 
 function simulate(P,z={},dils={}){
   const f=Object.assign({},P.founders);let fT=0;if(P.fut_mode==="join"){fT=(f[FUT]||0)/100;delete f[FUT];}
   const tot=Object.values(f).reduce((a,b)=>a+b,0);let own={};for(const k in f)own[k]=f[k]/tot;own[POOL]=0;if(P.fut_mode==="join")own[FUT]=0;
-  const inv={};
-  if(P.pool_on&&P.pool_initial>0){for(const k in own)own[k]*=(1-P.pool_initial);own[POOL]=P.pool_initial;}
+  // N = total share count (fully diluted, 1 at creation); cost/shc = invested amount and shares per preferred class (conversion price = cost/shc)
+  const inv={},cost={},shc={},cash={};FN.forEach(k=>cash[k]=0);let N=1,lastPrice=null;const flags=[];
+  const scale=x=>{for(const k in own)own[k]*=x;};
+  const add=(lab,d)=>{scale(1-d);own[lab]=(own[lab]||0)+d;N/=(1-d);};
+  if(P.pool_on&&P.pool_initial>0)add(POOL,P.pool_initial);
   let pending=[];const snaps=[];const M=months(P);const ev=[];
   if(P.fut_mode==="join"&&fT>0)ev.push([P.fut_join_month,"join"]);if(P.leaver!=="No one")ev.push([P.leave_month,"leave"]);ev.sort((a,b)=>a[0]-b[0]);
-  const scale=x=>{for(const k in own)own[k]*=x;};
-  const apply=kind=>{if(kind==="join"){scale(1-fT);own[FUT]=(own[FUT]||0)+fT;return;}
+  const apply=kind=>{if(kind==="join"){add(FUT,fT);return;}
     const fd=P.leaver;const t=P.leave_month+(P.vest_credit[fd]||0);const v=(P.leaver_type==="bad"||t<P.cliff)?0:Math.min(1,t/P.vest_months);
-    const rem=(own[fd]||0)*(1-v);own[fd]=(own[fd]||0)*v;if(rem<1)scale(1/(1-rem));};
+    const rem=(own[fd]||0)*(1-v);own[fd]=(own[fd]||0)*v;if(rem<1){scale(1/(1-rem));N*=(1-rem);}};
   const runEv=m=>{while(ev.length&&ev[0][0]<m)apply(ev.shift()[1]);};
   const asConv=()=>{const s=pending.reduce((a,p)=>a+p.a/p.c,0);const d={};for(const k in own)d[k]=own[k]*(1-s);pending.forEach(p=>d[p.lab]=(d[p.lab]||0)+p.a/p.c);return d;};
-  const topup=t=>{const p=own[POOL]||0;if(t<=p||t>=.9)return;const k2=(1-t)/(1-p);for(const k in own)if(k!==POOL)own[k]*=k2;own[POOL]=t;};
-  const convert=pre=>{if(!pending.length)return;const conv=pending.map(p=>[p.lab,p.a/Math.min(p.c,pre*(1-p.disc))]);
-    const s=Math.min(conv.reduce((a,c)=>a+c[1],0),.9);scale(1-s);conv.forEach(([l,x])=>own[l]=(own[l]||0)+x);pending=[];};
-  const money=(lab,d,amt)=>{scale(1-d);own[lab]=(own[lab]||0)+d;inv[lab]=(inv[lab]||0)+amt;};
+  const topup=t=>{const p=own[POOL]||0;if(t<=p||t>=.9)return;const k2=(1-t)/(1-p);for(const k in own)if(k!==POOL)own[k]*=k2;own[POOL]=t;N/=k2;};
+  const buy=(lab,d,amt)=>{inv[lab]=(inv[lab]||0)+amt;cost[lab]=(cost[lab]||0)+amt;shc[lab]=(shc[lab]||0)+d*N;};
+  const convert=pre=>{if(!pending.length)return;
+    const conv=pending.map(p=>{let v=Math.min(p.c,pre*(1-p.disc));if(p.floor>0)v=Math.max(v,p.floor);return [p,p.a/v];});
+    let s=conv.reduce((a,c)=>a+c[1],0);const k=s>.9?.9/s:1;s=Math.min(s,.9);scale(1-s);N/=(1-s);
+    conv.forEach(([p,x])=>{own[p.lab]=(own[p.lab]||0)+x*k;buy(p.lab,x*k,p.a);});pending=[];};
+  const money=(lab,d,amt)=>{add(lab,d);buy(lab,d,amt);};
+  const antidil=(pre,R,st)=>{if(P.antidil==="none"||lastPrice===null)return;const A=N,p2=pre/A;if(p2>=lastPrice*.999)return;
+    const ex={};let E=0;
+    for(const h in shc){if(!(own[h]>0)||!(shc[h]>0))continue;const cp=cost[h]/shc[h];if(p2>=cp)continue;
+      const ncp=P.antidil==="ratchet"?p2:cp*(A+R/cp)/(A+R/p2);const e=shc[h]*(cp/ncp-1);if(e>0){ex[h]=e;E+=e;}}
+    if(E>0){scale(A/(A+E));for(const h in ex){own[h]+=ex[h]/(A+E);shc[h]+=ex[h];}N=A+E;flags.push({stage:st,type:"antidil",x:E/N});}};
   const snap=(stage,post,raised)=>{const i2=Object.assign({},inv);pending.forEach(p=>i2[p.lab]=(i2[p.lab]||0)+p.a);
-    snaps.push({stage,month:M[stage],post,raised,own:asConv(),invested:i2});};
+    snaps.push({stage,month:M[stage],post,raised,own:asConv(),invested:i2,cash:Object.assign({},cash),flags:flags.slice()});};
   runEv(M["Pre-seed"]);
   if(P.preseed_mode!=="None"){const a=P.preseed.amount,c=P.preseed.cap;
-    if(P.preseed_mode==="SAFE")pending.push({lab:"SAFE (pre-seed)",a,c,disc:P.safe_discount});else money("Investors Pre-seed",Math.min(a/c,.5),a);
+    if(P.preseed_mode==="SAFE")pending.push({lab:"SAFE (pre-seed)",a,c,disc:P.safe_discount,floor:P.air_floor||0});
+    else{const d=Math.min(a/c,.5);money("Investors Pre-seed",d,a);lastPrice=c/N;}
     snap("Pre-seed",c,a);}else snap("Pre-seed",NaN,0);
   const last=STAGES.indexOf(P.last_stage);
   RS.forEach((st,i0)=>{const i=i0+1;if(i>last)return;runEv(M[st]);const r=P.rounds[st];
-    const post=r.post*Math.exp((z[st]||0)*r.sigma);const d=dils[st]??r.dil;let raised=post*d;
-    const fr=P.path_mode===PATHS[0]?(P.frictions[st]||0):0;const pp=snaps.length&&!isNaN(snaps[snaps.length-1].post)?snaps[snaps.length-1].post:post*(1-d);
-    if(st==="Seed"&&P.seed_mode==="SAFE"){if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on)topup(r.pool);pending.push({lab:"SAFE (seed)",a:raised,c:post,disc:P.safe_discount});}
-    else{convert(post*(1-d));if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on&&P.pool_mode==="pre")topup(r.pool/(1-d));money("Investors "+st,d,raised);
+    const prevPost=snaps.length&&!isNaN(snaps[snaps.length-1].post)?snaps[snaps.length-1].post:null;
+    let post=r.post*Math.exp((z[st]||0)*r.sigma);let d=dils[st]??r.dil;
+    // forced down round: the company still needs the same cash, at a lower valuation -> more dilution
+    if(P.down_stage===st&&prevPost){const need=post*d;post=prevPost*P.down_factor;d=Math.min(.45,need/post);}
+    let raised=post*d;
+    const fr=P.path_mode===PATHS[0]?(P.frictions[st]||0):0;const pp=prevPost??post*(1-d);
+    if(st==="Seed"&&P.seed_mode==="SAFE"){if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on)topup(r.pool);pending.push({lab:"SAFE (seed)",a:raised,c:post,disc:P.safe_discount,floor:0});}
+    else{convert(post*(1-d));if(fr>0)money(FRICTION,fr,pp*fr);if(P.pool_on&&P.pool_mode==="pre")topup(r.pool/(1-d));
+      antidil(post*(1-d),raised,st);
+      money("Investors "+st,d,raised);lastPrice=post/N;
       if(P.pool_on&&P.pool_mode==="post")topup(r.pool);
       if(P.ext_on&&["Series A","Series B","Series C"].includes(st)){money("Investors "+st,P.ext_dil,post*P.ext_dil);raised+=post*P.ext_dil;}}
+    if(P.sec_on&&P.sec_stage===st){let tot2=0;FN.forEach(k=>{const x=(own[k]||0)*P.sec_pct;own[k]-=x;tot2+=x;cash[k]+=x*post;});own[SECOND]=(own[SECOND]||0)+tot2;}
+    if(P.ref_who!=="No one"&&P.ref_stage===st&&P.pool_on){const g=Math.min(P.ref_pct,own[POOL]||0);own[POOL]-=g;own[P.ref_who]=(own[P.ref_who]||0)+g;}
     snap(st,post,raised);
-    if(st==="Seed"&&P.bridge_on&&last>=2)pending.push({lab:"Bridge SAFE",a:raised*P.bridge_frac,c:post*P.bridge_cap_mult,disc:P.safe_discount});});
+    if(st==="Seed"&&P.bridge_on&&last>=2)pending.push({lab:"Bridge SAFE",a:raised*P.bridge_frac,c:post*P.bridge_cap_mult,disc:P.safe_discount,floor:0});});
   return snaps;}
 const fTot=s=>FN.reduce((a,f)=>a+(s.own[f]||0),0);
 const CAL={};
-function calibrate(sec){if(CAL[sec])return CAL[sec];const q=defaultParams(sec);q.last_stage="Series D";q.frictions={};
+function calibrate(sec){if(CAL[sec])return CAL[sec];const q=defaultParams(sec);q.founders=clone(FDEF);q.last_stage="Series D";q.frictions={};
   RS.forEach((st,i0)=>{const idx=i0+1,tgt=TARGETS[sec][st];q.frictions[st]=0;if(fTot(simulate(q)[idx])<=tgt)return;
     let lo=0,hi=.4;for(let k=0;k<30;k++){const mid=(lo+hi)/2;q.frictions[st]=mid;if(fTot(simulate(q)[idx])>tgt)lo=mid;else hi=mid;}
     q.frictions[st]=rnd((lo+hi)/2,4);});return CAL[sec]=q.frictions;}
@@ -439,7 +530,7 @@ function monteCarlo(P,n,rho,ql){const u=rng(7),N=gaussF(u);const last=STAGES.ind
       if(ql*zc+b*N()>th){k++;continue;}
       if(u()<Math.min(1,rows[k].p_acq/Math.max(1e-6,1-g))){E=post*Math.exp(Math.log(rows[k].acq_mult)+P.acq_sigma*N());kind="Acquisition after "+s.stage;}
       else{E=0;kind="Failure after "+s.stage;}break;}
-    outcome.push(kind);if(E>0){const pr=proceeds(P,s,E);FN.forEach(f=>{const v=pr[f]||0;gross[f][i]=v>1e-4?v:0;});}}
+    outcome.push(kind);const pr=E>0?proceeds(P,s,E):{};FN.forEach(f=>{const v=(pr[f]||0)+((s.cash&&s.cash[f])||0);gross[f][i]=v>1e-4?v:0;});}
   return {gross,outcome,n};}
 function pctl(arr,q){if(!arr.length)return NaN;const a=Float64Array.from(arr).sort();const i=(a.length-1)*q/100,lo=Math.floor(i),hi=Math.ceil(i);return a[lo]+(a[hi]-a[lo])*(i-lo);}
 
@@ -452,6 +543,13 @@ function variants(P){const v=[];const mk=(g,l,kw)=>{const q=clone(P);Object.assi
   mk("Pool","Pool refreshed post-money",{pool_on:true,pool_mode:"post"});
   mk("Future founder","Reserve held from day one",{fut_mode:"reserve"});mk("Future founder","Issued on arrival (month "+P.fut_join_month+")",{fut_mode:"join"});
   mk("Preferences","1x non-participating",{participating:false,pref_mult:1});mk("Preferences","1x participating",{participating:true,pref_mult:1});
+  mk("Down round","No forced down round",{down_stage:"No one"});
+  mk("Down round","Series B at 0.7× Series A, weighted-average anti-dilution",{down_stage:"Series B",down_factor:.7,antidil:"broad"});
+  mk("Down round","Series B at 0.7× Series A, full ratchet",{down_stage:"Series B",down_factor:.7,antidil:"ratchet"});
+  mk("Secondary","No secondary sale",{sec_on:false});
+  mk("Secondary","Founders sell 10% of their shares at Series B",{sec_on:true,sec_stage:"Series B",sec_pct:.1});
+  mk("Refresh","No option refresh",{ref_who:"No one"});
+  mk("Refresh","2% option refresh to the CEO at Series B",{ref_who:"CEO",ref_stage:"Series B",ref_pct:.02});
   Object.keys(SECTORS).forEach(s=>{const d=stageDefaults(s,P.region);mk("Sector",s,{sector:s,rounds:d.rounds,preseed:d.preseed});});
   Object.keys(REGIONS).forEach(r=>{const d=stageDefaults(P.sector,r);mk("Region",r,{region:r,rounds:d.rounds,preseed:d.preseed});});
   return v;}
@@ -613,12 +711,12 @@ function renderExit(){const sn=P_PATHS[UI.ref];const st=sn.map(s=>s.stage);if(!U
   $("exStage").innerHTML=st.map(s=>`<option ${s===UI.exStage?"selected":""}>${s}</option>`).join("");$("exMult").value=UI.exMult;setTxt("exmv",nf2.format(UI.exMult)+"×");
   const s=sn[st.indexOf(UI.exStage)];const post=isNaN(s.post)?0:s.post;const E=post*UI.exMult;const prefT=Object.values(s.invested).reduce((a,b)=>a+b,0)*S.pref_mult;
   const pr=proceeds(S,s,E);const cm=colorMap(FN);
-  $("exSummary").innerHTML=`Acquisition at <b>${money(E)}</b>. Cumulative preferences ahead of founders: <b>${money(prefT)}</b>${S.participating?" (participating)":""}.`;
+  $("exSummary").innerHTML=`Acquisition at <b>${money(E)}</b>. Cumulative preferences ahead of founders: <b>${money(prefT)}</b>${S.participating?" (participating)":""}.`+(FN.some(f=>cashOf(s,f)>0)?" "+fmtT(T("secCash"),{m:money(FN.reduce((a,f)=>a+cashOf(s,f),0))})+".":"")+(s.flags&&s.flags.length?" ⚠ "+s.flags.map(g=>fmtT(T("antidilFlag"),{s:g.stage,x:pc(g.x)})).join(" ; ")+".":"")+(S.tax_mode==="apport"?"<br><span class=\"note\">"+T("taxApport")+"</span>":"");
   let t=`<table><tr><th>Founder</th><th>Stake</th><th>Paper (stake × price)</th><th>Gross received</th><th>Net after tax (${nf1.format(S.tax*100)}%)</th></tr>`;
-  FN.forEach(f=>{const g=pr[f]||0;t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td>${pc(s.own[f]||0)}</td><td>${money((s.own[f]||0)*E)}</td><td><b>${money(g)}</b></td><td>${money(g*(1-S.tax))}</td></tr>`;});
+  FN.forEach(f=>{const g=(pr[f]||0)+cashOf(s,f);t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td>${pc(s.own[f]||0)}</td><td>${money((s.own[f]||0)*E)}</td><td><b>${money(g)}</b></td><td>${money(g*(1-S.tax))}</td></tr>`;});
   $("exTbl").innerHTML=t+"</table>";
   if(!hasPlotly())return;const grid=[];for(let i=1;i<=120;i++)grid.push(post*3*i/120);
-  const tr=[];FN.forEach(f=>{tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(proceeds(S,s,e)[f]||0)*fxv()),name:f,type:"scatter",mode:"lines",line:{color:cm[f],width:3},hovertemplate:f+": %{y:,.1f} M"+UI.cur+"<extra></extra>"});
+  const tr=[];FN.forEach(f=>{tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>((proceeds(S,s,e)[f]||0)+cashOf(s,f))*fxv()),name:f,type:"scatter",mode:"lines",line:{color:cm[f],width:3},hovertemplate:f+": %{y:,.1f} M"+UI.cur+"<extra></extra>"});
     tr.push({x:grid.map(e=>e*fxv()),y:grid.map(e=>(s.own[f]||0)*e*fxv()),name:f+" paper",type:"scatter",mode:"lines",line:{color:cm[f],width:1,dash:"dot"},showlegend:false,hoverinfo:"skip"});});
   Plotly.react("chExit",tr,baseLayout({height:420,xaxis:{title:{text:"Acquisition price ("+UI.cur+"M)"},gridcolor:css("--line")},yaxis:{title:{text:UI.cur+"M"},gridcolor:css("--line")},
     shapes:[{type:"line",x0:prefT*fxv(),x1:prefT*fxv(),y0:0,y1:1,yref:"paper",line:{color:css("--fut"),dash:"dash",width:1.5}},{type:"line",x0:E*fxv(),x1:E*fxv(),y0:0,y1:1,yref:"paper",line:{color:css("--ink"),width:1}}],
@@ -653,7 +751,7 @@ function renderMc(){clearTimeout(mcT);mcT=setTimeout(()=>{const key=JSON.stringi
     baseLayout({height:300,hovermode:"closest",xaxis:{tickvals:ticks,ticktext:ticks.map(t=>money(Math.pow(10,t)/fxv())),gridcolor:css("--line")}}),CFG);}},120);}
 function renderSrc(){const rows=[["Median post-money and dilution by round","Carta, US software, 6 months to July 2026","Data"],
   ["AI premium: +38% at Series A, +193% at E+","Carta, State of Private Markets 2025","Data"],["AI / non-AI multipliers by round","Interpolated from Carta and PitchBook","Est."],
-  ["Europe coefficients","Atomico, PitchBook Europe","Est."],["Spread σ (seed P90 ≈ 4× median)","Carta Q1 2026, Q2 2025","Data + est."],
+  ["Europe / France: valuations 0.45-0.50× the US, dilution +2 pts, AI premium ~+20% (vs +38% in the US)","PitchBook Q3 2025 (France & Benelux), Equidam Q3 2025, Hayot Expertise 2026, Atomico 2025","Data + est."],["Down round: same amount raised at a lower price; broad-based weighted-average (standard) or full-ratchet anti-dilution","Standard NVCA formula; Cooley for frequency","Data + est."],["Secondary sale at the round price, option refresh from the pool, BSA AIR floor","Common practice, to confirm with your lawyer","Est."],["Spread σ (seed P90 ≈ 4× median)","Carta Q1 2026, Q2 2025","Data + est."],
   ["SAFEs: 93% of pre-seed, 91% post-money","Carta Q2 2026","Data"],["Median SAFE caps by amount raised","Carta 2025 and Q2 2026","Data"],
   ["Pool: ~10% at start, then +1 to 1.5 pts per round","Carta","Data"],["Median founder ownership: 56 / 36 / 23 / 16.1% (seed, A, B, C); AI at B: 27.3%","Carta Founder Ownership Report 2026","Data"],
   ["AI targets at C and D, non-AI at C and D","Extrapolation","Est."],["Age at round: 1.3 / 2.8 / 4.7 / 6.2 / 8.3 years","Carta 2025","Data"],
@@ -664,8 +762,213 @@ function renderSrc(){const rows=[["Median post-money and dilution by round","Car
   const d=stageDefaults(S.sector,S.region);let t=`<table><tr><th>Round</th><th>Post-money</th><th>Dilution</th><th>Pool after</th><th>σ</th><th>Next round</th><th>Age</th><th>Bridges (history)</th><th>Carta target</th></tr>`;
   RS.forEach(s=>{const r=d.rounds[s];t+=`<tr><td>${s}</td><td>${money(r.post)}</td><td>${pc(r.dil)}</td><td>${pc(r.pool)}</td><td>${nf2.format(r.sigma)}</td><td>${r.grad?pc(r.grad):"—"}</td><td>${nf1.format(r.month/12)} yrs</td><td>${pc(S.frictions[s]||0)}</td><td>${pc(TARGETS[S.sector][s])}</td></tr>`;});
   $("defTbl").innerHTML=t+"</table>";}
-function renderTab(){({cap:renderCap,val:renderVal,exit:renderExit,sc:renderSc,mc:renderMc,src:renderSrc})[UI.tab]();}
+function renderTab(){({cap:renderCap,fair:renderFair,val:renderVal,exit:renderExit,sc:renderSc,mc:renderMc,src:renderSrc})[UI.tab]();}
 function update(){syncControls();P_PATHS=paths(S);renderHero();renderTab();}
+
+// ============================================================ fonctionnalités v4 (texte via T())
+const TXD={
+fr:{share:"Copier le lien",shared:"Lien copié : il ouvre exactement ces réglages.",shareFail:"Copiez ce lien :",print:"Résumé imprimable",
+ presets:"Scénarios prêts à l'emploi",pr_us:"Médiane IA (US)",pr_fr:"Paris : BSA AIR + VC français",pr_bigseed:"Gros seed IA en SAFE",pr_hot:"Hyper-croissance IA",pr_hard:"Marché difficile",
+ presetNote:"Réinitialise les hypothèses de marché, garde votre répartition.",
+ floor:"Plancher BSA AIR (M$, 0 = aucun)",floorNote:"Protège les founders : si le tour suivant se fait sous le plancher, l'investisseur convertit au plancher et reçoit moins d'actions. Doit rester sous le cap.",
+ sec:"Les founders vendent une partie de leurs actions (secondaire)",secStage:"Au tour",secPct:"Part de leurs actions vendue",secNote:"Fréquent en IA dès la Series B. Vendu au prix du tour (souvent 10-20 % de décote en réalité) ; l'argent est encaissé tout de suite, même si la société échoue ensuite.",
+ down:"Down round forcé au tour",downNone:"No one",downF:"Valorisation, × post-money du tour précédent",downNote:"La société lève le même montant à un prix plus bas : la dilution augmente.",anti:"Anti-dilution des investisseurs",antiNone:"None",antiBroad:"Moyenne pondérée",antiRatchet:"Full ratchet",
+ antiNote:"S'applique à tout tour moins cher que le précédent, y compris dans le Monte Carlo. La moyenne pondérée (« broad-based ») est le standard ; le full ratchet est rare et très dur pour les founders.",
+ ref:"Refresh BSPCE pour",refStage:"Au tour",refPct:"Taille du refresh",refNote:"Les VC rechargent souvent le CEO (ou un founder clé) en BSPCE en Series B ou C, pris sur le pool.",
+ taxMode:"Régime fiscal",tx_pfu:"PFU 31,4 %",tx_cehr:"PFU + CEHR ≈ 35,4 %",tx_apport:"Apport-cession : impôt reporté",tx_custom:"Taux personnalisé",
+ taxApport:"Apport-cession : les titres sont apportés à une holding avant la vente, l'impôt est reporté (0 % aujourd'hui) si la holding réinvestit au moins 60 % du produit sous 2 ans ; il redevient dû si l'argent sort de la holding.",
+ cmpToggle:"Comparer avec une autre répartition (B)",cmpA:"A (réglages)",cmpB:"B (comparaison)",cmpPart:"Part",cmpPaper:"Papier",cmpExit:"Rachat à 1× le post-money",cmpHead:"Après la",cmpNote:"Mêmes hypothèses de marché pour A et B : seule la répartition de départ change.",
+ fairTab:"Répartition juste",fairTitle:"Proposer une répartition à partir de critères",
+ fairIntro:"Notez chaque founder de 0 à 5 sur ce qu'il apportera à partir d'aujourd'hui, et indiquez le travail déjà fait. Parler de critères plutôt que de pourcentages rend la discussion entre associés beaucoup plus simple. Méthode inspirée du « Founders' Pie Calculator » de Frank Demmler.",
+ crit:["Engagement et risque (temps plein, salaire auquel il renonce, durée)","Rôle et responsabilités à venir","Difficulté à le remplacer","Expertise clé pour le produit","Réseau, levée de fonds, premiers clients"],
+ weight:"Poids",criterion:"Critère",past:"Travail déjà fait (mois à temps plein)",P:"Valeur de ce qui existe déjà, face à tout ce qui reste à construire",inclFut:"Inclure le futur founder dans le calcul",
+ result:"Répartition proposée",proposal:"Proposition",current:"Actuelle",gap:"Écart",
+ sens:"Si ce qui existe vaut {a} : {x}. S'il vaut {b} : {y}.",apply:"Utiliser dans le simulateur",compare:"Comparer à la répartition actuelle",
+ fairNote:"Chaque critère distribue son poids au prorata des notes. « Déjà fait » distribue la part de valeur existante au prorata des mois travaillés. L'argent apporté par un founder se rembourse mieux à part (compte courant, actions achetées) que dans la répartition.",
+ alreadyDone:"Déjà fait",points:"Points",
+ sumTitle:"Résumé du scénario",sumDate:"Généré le",sumSplit:"Répartition et évolution",sumStart:"Création",sumValues:"Ce que vaut la part de chacun après la",sumPaper:"Valeur papier",sumExit:"Rachat à 1× le post-money, brut",sumNet:"Net",sumAssump:"Hypothèses principales",sumFair:"Répartition proposée par les critères",sumCmp:"Comparaison avec la répartition B",
+ sumDisc:"Simulation indicative à partir de médianes de marché (Carta, PitchBook, Cooley, Atomico). Ni conseil juridique, ni conseil fiscal, ni conseil financier.",
+ settings:"Réglages",close:"Fermer",antidilFlag:"anti-dilution déclenchée en {s} (+{x} d'actions pour les investisseurs)",secCash:"Les founders ont déjà encaissé {m} par la vente secondaire (inclus dans le brut)"},
+en:{share:"Copy link",shared:"Link copied: it opens exactly these settings.",shareFail:"Copy this link:",print:"Printable summary",
+ presets:"Ready-made scenarios",pr_us:"AI median (US)",pr_fr:"Paris: BSA AIR + French VCs",pr_bigseed:"Big AI seed on a SAFE",pr_hot:"AI hypergrowth",pr_hard:"Tough market",
+ presetNote:"Resets market assumptions, keeps your split.",
+ floor:"BSA AIR floor ($M, 0 = none)",floorNote:"Protects founders: if the next round prices below the floor, the investor converts at the floor and gets fewer shares. Must stay below the cap.",
+ sec:"Founders sell some of their shares (secondary)",secStage:"At round",secPct:"Share of their stock sold",secNote:"Common in AI from Series B. Sold at the round price (often a 10-20% discount in practice); the cash is received immediately, even if the company later fails.",
+ down:"Forced down round at",downNone:"None",downF:"Valuation, × previous round's post-money",downNote:"The company raises the same amount at a lower price: dilution goes up.",anti:"Investor anti-dilution",antiNone:"None",antiBroad:"Weighted average",antiRatchet:"Full ratchet",
+ antiNote:"Applies to any round priced below the previous one, including in Monte Carlo. Broad-based weighted average is standard; full ratchet is rare and very harsh on founders.",
+ ref:"BSPCE refresh for",refStage:"At round",refPct:"Refresh size",refNote:"VCs often top up the CEO (or a key founder) with options at Series B or C, taken from the pool.",
+ taxMode:"Tax regime",tx_pfu:"French flat tax 31.4%",tx_cehr:"Flat tax + CEHR ≈ 35.4%",tx_apport:"Holding rollover: tax deferred",tx_custom:"Custom rate",
+ taxApport:"Holding rollover (apport-cession): shares are contributed to a holding company before the sale; tax is deferred (0% today) if the holding reinvests at least 60% of proceeds within 2 years. It becomes due if the money leaves the holding.",
+ cmpToggle:"Compare with another split (B)",cmpA:"A (settings)",cmpB:"B (comparison)",cmpPart:"Stake",cmpPaper:"Paper",cmpExit:"Acquisition at 1× post-money",cmpHead:"After",cmpNote:"Same market assumptions for A and B: only the starting split changes.",
+ fairTab:"Fair split",fairTitle:"Suggest a split from criteria",
+ fairIntro:"Rate each founder 0 to 5 on what they will bring from today, and enter the work already done. Talking about criteria rather than percentages makes the co-founder discussion much easier. Method inspired by Frank Demmler's \"Founders' Pie Calculator\".",
+ crit:["Commitment and risk (full time, salary given up, duration)","Upcoming role and responsibilities","How hard to replace","Key expertise for the product","Network, fundraising, first customers"],
+ weight:"Weight",criterion:"Criterion",past:"Work already done (full-time months)",P:"Value of what already exists, versus everything left to build",inclFut:"Include the future founder",
+ result:"Suggested split",proposal:"Suggestion",current:"Current",gap:"Gap",
+ sens:"If what exists is worth {a}: {x}. If it's worth {b}: {y}.",apply:"Use in the simulator",compare:"Compare with current split",
+ fairNote:"Each criterion splits its weight pro rata to the ratings. \"Already done\" splits the existing value pro rata to months worked. Cash put in by a founder is better repaid separately (shareholder loan, purchased shares) than through the split.",
+ alreadyDone:"Already done",points:"Points",
+ sumTitle:"Scenario summary",sumDate:"Generated on",sumSplit:"Split over time",sumStart:"Incorporation",sumValues:"What each stake is worth after",sumPaper:"Paper value",sumExit:"Acquisition at 1× post-money, gross",sumNet:"Net",sumAssump:"Main assumptions",sumFair:"Split suggested by the criteria",sumCmp:"Comparison with split B",
+ sumDisc:"Indicative simulation based on market medians (Carta, PitchBook, Cooley, Atomico). Not legal, tax or financial advice.",
+ settings:"Settings",close:"Close",antidilFlag:"anti-dilution triggered at {s} (+{x} shares for investors)",secCash:"Founders already received {m} from the secondary sale (included in gross)"}};
+function T(k){return (TXD[typeof LANG!=="undefined"?LANG:"fr"]||TXD.fr)[k];}
+const fmtT=(s,o)=>s.replace(/\{(\w+)\}/g,(_,k)=>o[k]);
+const cashOf=(s,f)=>(s&&s.cash&&s.cash[f])||0;
+
+// ------------------------------------------------------------ partage par lien (seulement ce qui diffère des valeurs par défaut)
+function encDiff(){const d=defaultParams(S.sector,S.region);const o={sector:S.sector,region:S.region};
+  for(const k in S){if(k==="frictions")continue;if(JSON.stringify(S[k])!==JSON.stringify(d[k]))o[k]=S[k];}
+  return btoa(unescape(encodeURIComponent(JSON.stringify({S:o,UI:{cur:UI.cur,fx:UI.fx,ref:UI.ref}}))));}
+function shareURL(){return location.origin+location.pathname+"#s="+encDiff();}
+function toast(msg){let t=$("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";t.setAttribute("role","status");document.body.append(t);}
+  t.textContent=msg;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2600);}
+async function copyShare(){const u=shareURL();try{await navigator.clipboard.writeText(u);toast(T("shared"));}catch(e){window.prompt(T("shareFail"),u);}}
+
+// ------------------------------------------------------------ scénarios prêts à l'emploi
+const PRESETS={
+ us:{sector:"AI app / agentic infra",region:"US (Carta baseline)",ui:{cur:"$",ref:"P50"}},
+ fr:{sector:"AI app / agentic infra",region:"Europe / France",ui:{cur:"€",ref:"P50"}},
+ bigseed:{sector:"AI app / agentic infra",region:"US (Carta baseline)",kw:{seed_mode:"SAFE",bridge_on:false},ui:{ref:"P50"}},
+ hot:{sector:"AI app / agentic infra",region:"US (Carta baseline)",kw:{path_mode:PATHS[1]},ui:{ref:"P75"}},
+ hard:{sector:"AI app / agentic infra",region:"US (Carta baseline)",kw:{down_stage:"Series B",down_factor:.7,antidil:"broad",ext_on:true},ui:{ref:"P25"}}};
+function applyPreset(k){const p=PRESETS[k];const keep={founders:S.founders,fair:S.fair,cmp:S.cmp,cmp_on:S.cmp_on,vest_credit:S.vest_credit};
+  S=Object.assign(defaultParams(p.sector,p.region),clone(keep),p.kw||{});S.frictions=calibrate(S.sector);Object.assign(UI,p.ui||{});UI.stage=null;UI.exStage=null;buildRounds();update();}
+
+// ------------------------------------------------------------ répartition juste
+const FAIR_COL=["#5B7FA6","#8FB0D4","#7C9A6E","#B6C98F","#C79A4B","#D9BFAE"];
+function fairCalc(fa,P){const n=fa.incl_fut?4:3;const sh=new Array(n).fill(0);const parts=[];
+  const act=fa.w.map((w,c)=>{const t=fa.r[c].slice(0,n).reduce((a,b)=>a+b,0);return t>0?w:0;});const W=act.reduce((a,b)=>a+b,0)||1;
+  const pm=fa.past.slice(0,n);const pt=pm.reduce((a,b)=>a+b,0);const Pp=pt>0?P:0;
+  fa.w.forEach((w,c)=>{const t=fa.r[c].slice(0,n).reduce((a,b)=>a+b,0);const row=[];for(let i=0;i<n;i++){const v=t>0?(1-Pp)*act[c]/W*fa.r[c][i]/t:0;row.push(v);sh[i]+=v;}parts.push(row);});
+  const prow=[];for(let i=0;i<n;i++){const v=pt>0?Pp*pm[i]/pt:0;prow.push(v);sh[i]+=v;}parts.push(prow);
+  const tot=sh.reduce((a,b)=>a+b,0)||1;return {share:sh.map(x=>x/tot),parts,n};}
+function roundSplit(share){const v=share.map(x=>Math.round(x*200)/2);const diff=100-v.reduce((a,b)=>a+b,0);
+  const i=v.indexOf(Math.max(...v));v[i]=Math.round((v[i]+diff)*2)/2;while(v.length<4)v.push(0);return v;}
+let fairKey="";
+function renderFair(){const fa=S.fair;const n=fa.incl_fut?4:3;const names=FN.slice(0,n);const key=n+"|"+LANG;const box=$("p-fair");
+  if(fairKey!==key||!box.querySelector(".fairIn")){fairKey=key;
+    let h=`<div class="card fairIn"><h3>${T("fairTitle")}</h3><p class="note">${T("fairIntro")}</p><div class="tbl"><table class="fairT"><tr><th>${T("criterion")}</th><th>${T("weight")}</th>${names.map(f=>`<th>${short(f)}</th>`).join("")}</tr>`;
+    T("crit").forEach((c,ci)=>{h+=`<tr><td class="crit">${c}</td><td><input type="number" min="0" max="100" step="5" data-fw="${ci}" value="${fa.w[ci]}"></td>${names.map((f,i)=>`<td><input type="number" min="0" max="5" step="1" inputmode="numeric" data-fr="${ci}" data-fi="${i}" value="${fa.r[ci][i]}" aria-label="${c} — ${f}"></td>`).join("")}</tr>`;});
+    h+=`<tr><td class="crit">${T("past")}</td><td></td>${names.map((f,i)=>`<td><input type="number" min="0" max="60" step="1" inputmode="numeric" data-fp="${i}" value="${fa.past[i]}" aria-label="${T("past")} — ${f}"></td>`).join("")}</tr></table></div>
+      <div class="row"><label>${T("P")} <b id="fairPv"></b></label><input type="range" id="fairP" min="0" max="40" step="1" value="${Math.round(fa.P*100)}"></div>
+      <label class="chk"><input type="checkbox" id="fairFut" ${fa.incl_fut?"checked":""}> ${T("inclFut")}</label></div>
+      <div class="card"><h3>${T("result")}</h3><div class="tbl" id="fairRes"></div><p class="note" id="fairSens"></p>
+      <div class="btnrow"><button class="btn" id="fairApply" type="button">${T("apply")}</button><button class="btn" id="fairCmp" type="button">${T("compare")}</button></div>
+      <div class="chart" id="chFair"></div><p class="note">${T("fairNote")}</p></div>`;
+    box.innerHTML=h;
+    box.querySelectorAll("input[data-fw]").forEach(el=>el.addEventListener("input",e=>{fa.w[+e.target.dataset.fw]=Math.max(0,+e.target.value||0);fairResult();}));
+    box.querySelectorAll("input[data-fr]").forEach(el=>el.addEventListener("input",e=>{const t=e.target;fa.r[+t.dataset.fr][+t.dataset.fi]=Math.min(5,Math.max(0,+t.value||0));fairResult();}));
+    box.querySelectorAll("input[data-fp]").forEach(el=>el.addEventListener("input",e=>{fa.past[+e.target.dataset.fp]=Math.max(0,+e.target.value||0);fairResult();}));
+    $("fairP").addEventListener("input",e=>{fa.P=+e.target.value/100;fairResult();});
+    $("fairFut").addEventListener("change",e=>{fa.incl_fut=e.target.checked;renderFair();});
+    $("fairApply").addEventListener("click",()=>{const v=roundSplit(fairCalc(fa,fa.P).share);FN.forEach((f,i)=>S.founders[f]=i<3?Math.max(10,v[i]):v[i]);update();toast("✓ "+v.slice(0,n).join(" / "));});
+    $("fairCmp").addEventListener("click",()=>{S.cmp=roundSplit(fairCalc(fa,fa.P).share);S.cmp_on=true;document.querySelector('nav.tabs button[data-tab="cap"]').click();});}
+  fairResult();}
+function fairResult(){const fa=S.fair;const R=fairCalc(fa,fa.P);const names=FN.slice(0,R.n);const tot=FN.reduce((a,f)=>a+S.founders[f],0);const cm=colorMap(FN);
+  $("fairPv").textContent=Math.round(fa.P*100)+(LANG==="fr"?" %":"%");
+  let t=`<table><tr><th>Founder</th><th>${T("proposal")}</th><th>${T("current")}</th><th>${T("gap")}</th></tr>`;
+  names.forEach((f,i)=>{const cur=S.founders[f]/tot;const g=(R.share[i]-cur)*100;t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td><b>${pc(R.share[i])}</b></td><td>${pc(cur)}</td><td>${(g>=0?"+":"")+nf1.format(g)}</td></tr>`;});
+  $("fairRes").innerHTML=t+"</table>";
+  const a=Math.max(0,fa.P/2),b=Math.min(.6,fa.P*1.5||.15);const fs=x=>fairCalc(fa,x).share.map(v=>nf0.format(v*100)).join(" / ");
+  const pz=x=>Math.round(x*100)+(LANG==="fr"?" %":"%");$("fairSens").textContent=fmtT(T("sens"),{a:pz(a),b:pz(b),x:fs(a),y:fs(b)});
+  if(!hasPlotly())return;const labs=T("crit").map(c=>c.split(" (")[0]).concat([T("alreadyDone")]);
+  Plotly.react("chFair",R.parts.map((row,ci)=>({type:"bar",orientation:"h",y:names.map(short),x:row.map(v=>v*100),name:labs[ci],marker:{color:FAIR_COL[ci]},hovertemplate:labs[ci]+": %{x:.1f}<extra></extra>"})),
+    baseLayout({height:90+48*R.n,barmode:"stack",margin:{l:110,r:12,t:10,b:40},xaxis:{ticksuffix:LANG==="fr"?" %":"%",gridcolor:css("--line"),range:[0,100]},yaxis:{autorange:"reversed"},legend:{orientation:"h",y:-0.25,traceorder:"normal"},hovermode:"y unified"}),CFG);}
+
+// ------------------------------------------------------------ comparaison A / B (onglet Évolution)
+function cmpParams(){const q=clone(S);FN.forEach((f,i)=>q.founders[f]=S.cmp[i]||0);return q;}
+function renderCmp(){const box=$("cmpCard");if(!box)return;
+  if(!box.dataset.built){box.dataset.built="1";box.innerHTML=`<label class="chk"><input type="checkbox" id="cmp_on"> ${T("cmpToggle")}</label><div class="cmpIn" id="cmpIn">${FN.map((f,i)=>`<label>${short(f)}<input type="number" min="0" max="100" step="0.5" data-ci="${i}"></label>`).join("")}</div><div class="tbl" id="cmpOut"></div>`;
+    $("cmp_on").addEventListener("change",e=>{S.cmp_on=e.target.checked;update();});
+    box.querySelectorAll("input[data-ci]").forEach(el=>el.addEventListener("change",e=>{S.cmp[+e.target.dataset.ci]=Math.max(0,+e.target.value||0);update();}));}
+  $("cmp_on").checked=S.cmp_on;box.querySelectorAll("input[data-ci]").forEach(el=>{el.value=S.cmp[+el.dataset.ci];el.disabled=!S.cmp_on;});
+  const out=$("cmpOut");if(!S.cmp_on||!P_PATHS){out.innerHTML="";return;}
+  const A=P_PATHS[UI.ref],B=paths(cmpParams())[UI.ref];const a=A.at(-1),b=B.at(-1);const pa=proceeds(S,a,a.post),pb=proceeds(S,b,b.post);const cm=colorMap(FN);
+  let t=`<table><tr><th>${T("cmpHead")} ${a.stage}</th><th>A · ${T("cmpPart")}</th><th>B · ${T("cmpPart")}</th><th>A · ${T("cmpPaper")}</th><th>B · ${T("cmpPaper")}</th><th>A · ${T("cmpExit")}</th><th>B · ${T("cmpExit")}</th></tr>`;
+  FN.forEach(f=>{t+=`<tr><td><span class="dot" style="--c:${cm[f]}"></span>${f}</td><td>${pc(a.own[f]||0)}</td><td><b>${pc(b.own[f]||0)}</b></td><td>${money((a.own[f]||0)*a.post)}</td><td><b>${money((b.own[f]||0)*b.post)}</b></td><td>${money((pa[f]||0)+cashOf(a,f))}</td><td><b>${money((pb[f]||0)+cashOf(b,f))}</b></td></tr>`;});
+  out.innerHTML=t+`</table><p class="note">${T("cmpNote")}</p>`;
+  if(hasPlotly()&&$("chLines").data){const x=B.map(s=>s.stage);Plotly.addTraces("chLines",FN.map(f=>({x,y:B.map(s=>(s.own[f]||0)*100),name:"B · "+short(f),type:"scatter",mode:"lines",line:{color:cm[f],width:2,dash:"dash"},hovertemplate:"B · "+f+": %{y:.1f}%<extra></extra>"})));}}
+
+// ------------------------------------------------------------ contrôles supplémentaires
+function opt(v,l,sel){return `<option value="${v}" ${v===sel?"selected":""}>${l}</option>`;}
+function extraBuild(){
+  $("shareBtn").textContent="🔗 "+T("share");$("printBtn").textContent="🖨 "+T("print");$("copyLink").textContent=T("share");
+  $("drawerBtn").textContent="⚙ "+T("settings");$("drawerClose").setAttribute("aria-label",T("close"));
+  $("presetCtl").innerHTML=`<div class="plabel">${T("presets")}</div><div class="pbtns">${Object.keys(PRESETS).map(k=>`<button class="btn sm" type="button" data-preset="${k}">${T("pr_"+k)}</button>`).join("")}</div><p class="note">${T("presetNote")}</p>`;
+  $("floorRow").innerHTML=`<label>${T("floor")}</label><input type="number" id="air_floor" step="0.5" min="0"><p class="note">${T("floorNote")}</p>`;
+  const st=RS;
+  $("eventsBody").innerHTML=`
+   <label class="chk"><input type="checkbox" id="sec_on"> ${T("sec")}</label>
+   <div class="row"><label>${T("secStage")}</label><select id="sec_stage"></select></div>
+   <div class="row"><label>${T("secPct")} <b id="secv"></b></label><input type="range" id="sec_pct" min="1" max="30" step="1"></div>
+   <p class="note">${T("secNote")}</p><hr>
+   <div class="row"><label>${T("down")}</label><select id="down_stage"></select></div>
+   <div class="row"><label>${T("downF")} <b id="downv"></b></label><input type="range" id="down_factor" min="0.3" max="1" step="0.05"></div>
+   <p class="note">${T("downNote")}</p>
+   <div class="row"><label>${T("anti")}</label><div class="seg" id="antiSeg"><button type="button" data-a="none">${T("antiNone")}</button><button type="button" data-a="broad">${T("antiBroad")}</button><button type="button" data-a="ratchet">${T("antiRatchet")}</button></div></div>
+   <p class="note">${T("antiNote")}</p><hr>
+   <div class="row"><label>${T("ref")}</label><select id="ref_who"></select></div>
+   <div class="row"><label>${T("refStage")}</label><select id="ref_stage"></select></div>
+   <div class="row"><label>${T("refPct")} <b id="refv"></b></label><input type="range" id="ref_pct" min="0.5" max="5" step="0.5"></div>
+   <p class="note">${T("refNote")}</p>`;
+  $("taxModeRow").innerHTML=`<label>${T("taxMode")}</label><select id="tax_mode">${["pfu","cehr","apport","custom"].map(k=>`<option value="${k}">${T("tx_"+k)}</option>`).join("")}</select><p class="note" id="taxNote"></p>`;
+  renderCmp();}
+function extraSync(){
+  $("air_floor").value=S.air_floor;$("air_floor").disabled=S.preseed_mode!=="SAFE";
+  $("sec_on").checked=S.sec_on;$("sec_stage").innerHTML=RS.map(s=>opt(s,s,S.sec_stage)).join("");$("sec_pct").value=S.sec_pct*100;$("secv").textContent=Math.round(S.sec_pct*100)+(LANG==="fr"?" %":"%");
+  ["sec_stage","sec_pct"].forEach(id=>$(id).disabled=!S.sec_on);
+  $("down_stage").innerHTML=[opt("No one",T("downNone"),S.down_stage)].concat(RS.slice(1).map(s=>opt(s,s,S.down_stage))).join("");
+  $("down_factor").value=S.down_factor;$("downv").textContent=nf2.format(S.down_factor)+"×";$("down_factor").disabled=S.down_stage==="No one";
+  document.querySelectorAll("#antiSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===S.antidil));
+  $("ref_who").innerHTML=[opt("No one",T("downNone"),S.ref_who)].concat(FN.map(f=>opt(f,f,S.ref_who))).join("");
+  $("ref_stage").innerHTML=RS.map(s=>opt(s,s,S.ref_stage)).join("");$("ref_pct").value=S.ref_pct*100;$("refv").textContent=nf1.format(S.ref_pct*100)+(LANG==="fr"?" %":"%");
+  ["ref_stage","ref_pct"].forEach(id=>$(id).disabled=S.ref_who==="No one");
+  $("tax_mode").value=S.tax_mode||"custom";$("taxNote").textContent=S.tax_mode==="apport"?T("taxApport"):"";}
+function extraWire(){
+  $("shareBtn").addEventListener("click",copyShare);$("copyLink").addEventListener("click",copyShare);$("printBtn").addEventListener("click",printSummary);
+  $("presetCtl").addEventListener("click",e=>{const b=e.target.closest("[data-preset]");if(b)applyPreset(b.dataset.preset);});
+  $("air_floor").addEventListener("change",e=>{S.air_floor=Math.min(Math.max(0,+e.target.value||0),S.preseed.cap);update();});
+  $("sec_on").addEventListener("change",e=>{S.sec_on=e.target.checked;update();});
+  $("sec_stage").addEventListener("change",e=>{S.sec_stage=e.target.value;update();});
+  $("sec_pct").addEventListener("input",e=>{S.sec_pct=+e.target.value/100;update();});
+  $("down_stage").addEventListener("change",e=>{S.down_stage=e.target.value;update();});
+  $("down_factor").addEventListener("input",e=>{S.down_factor=+e.target.value;update();});
+  document.querySelectorAll("#antiSeg button").forEach(b=>b.addEventListener("click",()=>{S.antidil=b.dataset.a;update();}));
+  $("ref_who").addEventListener("change",e=>{S.ref_who=e.target.value;update();});
+  $("ref_stage").addEventListener("change",e=>{S.ref_stage=e.target.value;update();});
+  $("ref_pct").addEventListener("input",e=>{S.ref_pct=+e.target.value/100;update();});
+  $("tax_mode").addEventListener("change",e=>{S.tax_mode=e.target.value;const m={pfu:.314,cehr:.354,apport:0};if(S.tax_mode in m)S.tax=m[S.tax_mode];update();});
+  $("tax").addEventListener("input",()=>{S.tax_mode="custom";$("tax_mode").value="custom";$("taxNote").textContent="";});
+  const close=()=>{document.body.classList.remove("drawer-open");$("drawerBg").hidden=true;$("drawerBtn").setAttribute("aria-expanded","false");};
+  $("drawerBtn").addEventListener("click",()=>{document.body.classList.add("drawer-open");$("drawerBg").hidden=false;$("drawerBtn").setAttribute("aria-expanded","true");$("drawerClose").focus();});
+  $("drawerClose").addEventListener("click",close);$("drawerBg").addEventListener("click",close);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("drawer-open"))close();});}
+
+// ------------------------------------------------------------ résumé imprimable
+function printSummary(){const sn=P_PATHS[UI.ref];const last=sn.at(-1);const tot=FN.reduce((a,f)=>a+S.founders[f],0);const cm=colorMap(holdersOf(sn));
+  const bar=o=>`<div class="pbar">${Object.keys(o).filter(h=>o[h]>.004).map(h=>`<span style="flex:0 0 ${o[h]*100}%;background:${cm[h]||"#999"}" title="${h}">${o[h]>.06?nf0.format(o[h]*100):""}</span>`).join("")}</div>`;
+  const start={};FN.forEach(f=>start[f]=S.founders[f]/tot);
+  let h=`<h1>${document.querySelector("header h1").textContent}</h1><p class="pmeta">${T("sumTitle")} · ${T("sumDate")} ${new Date().toLocaleDateString(LANG==="fr"?"en-US":"en-US")} · ${S.sector} · ${S.region} · ${S.path_mode} · ${UI.ref}</p>`;
+  h+=`<h2>${T("sumSplit")}</h2><div class="plabel2">${T("sumStart")}</div>${bar(start)}<div class="plabel2">${last.stage} · post-money ${money(last.post)}</div>${bar(last.own)}`;
+  h+=`<table><tr><th></th><th>${T("sumStart")}</th>${sn.map(s=>`<th>${s.stage}</th>`).join("")}</tr>${FN.map(f=>`<tr><td>${f}</td><td>${pc(start[f])}</td>${sn.map(s=>`<td>${pc(s.own[f]||0)}</td>`).join("")}</tr>`).join("")}
+    <tr><td><b>Founders</b></td><td>100%</td>${sn.map(s=>`<td><b>${pc(fTot(s))}</b></td>`).join("")}</tr><tr><td>Post-money</td><td>—</td>${sn.map(s=>`<td>${money(s.post)}</td>`).join("")}</tr></table>`;
+  const pr=proceeds(S,last,last.post);
+  h+=`<h2>${T("sumValues")} ${last.stage}</h2><table><tr><th>Founder</th>${["P25","P50","P75"].map(p=>`<th>${T("sumPaper")} ${p}</th>`).join("")}<th>${T("sumExit")}</th><th>${T("sumNet")}</th></tr>
+    ${FN.map(f=>{const g=(pr[f]||0)+cashOf(last,f);return `<tr><td>${f}</td>${["P25","P50","P75"].map(p=>{const l=P_PATHS[p].at(-1);return `<td>${money((l.own[f]||0)*l.post)}</td>`;}).join("")}<td>${money(g)}</td><td>${money(g*(1-S.tax))}</td></tr>`;}).join("")}</table>`;
+  if(S.cmp_on){const b=paths(cmpParams())[UI.ref].at(-1);h+=`<h2>${T("sumCmp")} (${S.cmp.join(" / ")})</h2><table><tr><th>Founder</th><th>A</th><th>B</th></tr>${FN.map(f=>`<tr><td>${f}</td><td>${pc(last.own[f]||0)}</td><td>${pc(b.own[f]||0)}</td></tr>`).join("")}</table>`;}
+  const fr=fairCalc(S.fair,S.fair.P);if(S.fair.past.some(x=>x>0)||S.fair.r.some(r=>new Set(r.slice(0,fr.n)).size>1))h+=`<h2>${T("sumFair")}</h2><p>${FN.slice(0,fr.n).map((f,i)=>f+" "+pc(fr.share[i])).join(" · ")}</p>`;
+  const AL={none:T("antiNone"),broad:T("antiBroad"),ratchet:T("antiRatchet")};
+  const lst=[`${STAGES[0]}: ${S.preseed_mode}${S.preseed_mode!=="None"?` ${money(S.preseed.amount)} / cap ${money(S.preseed.cap)}${S.air_floor>0?" / "+T("floor").split(" (")[0]+" "+money(S.air_floor):""}`:""}`,`Seed: ${S.seed_mode}`,`Bridge: ${S.bridge_on?"✓":"—"}`,`Pool: ${S.pool_on?(S.pool_mode==="pre"?"pre-money":"post-money"):"—"}`,
+    `${T("taxMode")}: ${T("tx_"+(S.tax_mode||"custom"))} (${pc(S.tax)})`,S.down_stage!=="No one"?`${T("down")} ${S.down_stage} ×${nf2.format(S.down_factor)} · ${T("anti")}: ${AL[S.antidil]}`:"",
+    S.sec_on?`${T("sec")}: ${pc(S.sec_pct)} · ${S.sec_stage}`:"",S.ref_who!=="No one"?`${T("ref")} ${S.ref_who}: ${pc(S.ref_pct)} · ${S.ref_stage}`:""].filter(Boolean);
+  h+=`<h2>${T("sumAssump")}</h2><ul>${lst.map(x=>`<li>${x}</li>`).join("")}</ul><p class="pdisc">${T("sumDisc")}</p>`;
+  $("printSum").innerHTML=h;window.print();}
+
+// ------------------------------------------------------------ branchement sur l'interface existante
+{const b0=buildControls;buildControls=function(){b0();extraBuild();};
+ const s0=syncControls;syncControls=function(){s0();extraSync();};
+ const w0=wire;wire=function(){w0();extraWire();};
+ const c0=renderCap;renderCap=function(){c0();renderCmp();};}
 
 const LANG="en";const LMAP=[["IA appli / infra agentique", "AI app / agentic infra"], ["Moyenne marché (IA + non-IA)", "Market average (AI + non-AI)"], ["Logiciel non-IA", "Non-AI software"], ["US (référence Carta)", "US (Carta baseline)"], ["Historique observé (Carta)", "Observed history (Carta)"], ["Marché 2026 (parcours propre)", "2026 market (clean path)"], ["Pricée", "Priced"], ["Aucune", "None"], ["Aucun", "No one"], ["Pré-seed", "Pre-seed"], ["Série A", "Series A"], ["Série B", "Series B"], ["Série C", "Series C"], ["Série D", "Series D"], ["Futur founder (CMO)", "Future founder (CMO)"]];
 function toLocal(o){const m=new Map(LMAP.map(p=>LANG==="fr"?[p[1],p[0]]:[p[0],p[1]]));const f=x=>{if(typeof x==="string")return m.has(x)?m.get(x):x;if(Array.isArray(x))return x.map(f);if(x&&typeof x==="object"){const r={};for(const k in x)r[m.has(k)?m.get(k):k]=f(x[k]);return r;}return x;};return f(o);}
@@ -691,6 +994,15 @@ const COOLEY="https://www.cooley.com/news/insight/2026/2026-08-17-q2-2026-ventur
 const PFU_URL="https://www.abcbourse.com/marches/le-pfu-va-passer-de-30-a-31-4-pour-de-nombreux-actionnaires-francais-en-2026_683361";
 const G={
 fr:[
+{k:["down round","down rounds"],t:"Down round",d:"Levée à une valorisation plus basse que le tour précédent.",w:"Ça arrive quand la croissance déçoit. Vous levez le même montant à un prix plus bas, donc vous cédez plus, et l'anti-dilution peut encore aggraver l'effet.",m:{tab:"sc",l:"Voir les scénarios Down round"}},
+{k:["anti-dilution"],t:"Anti-dilution",d:"Clause qui protège un investisseur si un tour suivant se fait moins cher : il reçoit des actions en plus, prises sur tout le monde.",w:"La version « moyenne pondérée » est standard et acceptable. Refusez le full ratchet s'il est proposé."},
+{k:["full ratchet"],t:"Full ratchet",d:"Anti-dilution maximale : l'investisseur est recalculé comme s'il avait payé le nouveau prix plus bas.",w:"Très rare et très coûteux pour les founders en cas de down round : à refuser."},
+{k:["moyenne pondérée"],t:"Moyenne pondérée (broad-based)",d:"Anti-dilution standard : le prix de conversion de l'investisseur baisse en fonction de la taille du nouveau tour.",w:"C'est ce qu'on trouve dans la plupart des pactes ; l'effet reste limité si le down round est modéré."},
+{k:["secondaire","vente secondaire"],t:"Vente secondaire",d:"Un founder vend une partie de ses propres actions à un investisseur, sans que la société émette de nouvelles actions.",w:"Permet d'encaisser un peu d'argent avant la sortie, souvent dès la Série B en IA. Le montant est à vous même si la société échoue ensuite."},
+{k:["refresh"],t:"Refresh BSPCE",d:"Nouvelle attribution de BSPCE à un founder ou un salarié déjà en place, prise sur le pool.",w:"Les VC le proposent souvent au CEO en Série B ou C quand sa part est devenue faible. C'est un levier si l'écart de répartition entre vous fait débat."},
+{k:["apport-cession"],t:"Apport-cession",d:"Vous apportez vos actions à une holding avant la vente : l'impôt sur la plus-value est reporté.",w:"Utile pour une grosse sortie si vous réinvestissez : la holding doit réinvestir au moins 60 % sous 2 ans. À monter avec un fiscaliste avant toute vente."},
+{k:["plancher"],t:"Plancher (BSA AIR)",d:"Valorisation minimale à laquelle le BSA AIR se convertit.",w:"Il protège les founders : si le tour suivant est très bas, l'investisseur ne convertit pas à un prix catastrophique pour vous."},
+{k:["Founders' Pie Calculator"],t:"Founders' Pie Calculator",d:"Méthode de Frank Demmler : on pondère des critères, on note chaque founder, et on en déduit une répartition.",w:"Elle transforme une négociation de pourcentages en discussion sur des faits, beaucoup plus facile à trancher entre associés."},
 {k:["SAFE","SAFEs"],t:"SAFE",d:"Contrat : l'investisseur verse l'argent maintenant et reçoit des actions au prochain tour pricé, à un prix plafonné par le cap.",w:"Votre pré-seed se fera très probablement en SAFE ou en BSA AIR. Sa part est connue dès la signature : montant ÷ cap.",m:{url:CARTA_SAFE,l:"Données Carta sur les SAFE"}},
 {k:["BSA AIR"],t:"BSA AIR",d:"L'équivalent français du SAFE : un bon qui se transforme en actions à la prochaine levée.",w:"C'est ce qu'on vous proposera si vous levez auprès d'angels ou de fonds français. Le simulateur le traite comme un SAFE."},
 {k:["cap table"],t:"Cap table",d:"Le tableau de qui détient quel pourcentage de la société.",w:"C'est ce que tout le simulateur fait évoluer, tour après tour.",m:{tab:"cap",l:"Voir l'onglet Évolution"}},
@@ -724,6 +1036,15 @@ fr:[
 {k:["ρ"],t:"ρ (persistance)",d:"À quel point une boîte bien valorisée à un tour le reste au tour suivant.",w:"Élevé : les bons départs restent bons. Valeur par défaut : 0,7."}
 ],
 en:[
+{k:["down round","down rounds"],t:"Down round",d:"A raise at a lower valuation than the previous round.",w:"It happens when growth disappoints. You raise the same amount at a lower price, so you sell more, and anti-dilution can make it worse.",m:{tab:"sc",l:"See the down-round scenarios"}},
+{k:["anti-dilution"],t:"Anti-dilution",d:"A clause protecting an investor if a later round is cheaper: they get extra shares, taken from everyone.",w:"The weighted-average version is standard and acceptable. Push back on full ratchet if it's offered."},
+{k:["full ratchet"],t:"Full ratchet",d:"Maximum anti-dilution: the investor is repriced as if they had paid the new, lower price.",w:"Very rare and very costly for founders in a down round: refuse it."},
+{k:["weighted average"],t:"Weighted average (broad-based)",d:"Standard anti-dilution: the investor's conversion price drops according to the size of the new round.",w:"It's in most shareholders' agreements; the effect stays limited if the down round is moderate."},
+{k:["secondary","secondary sale"],t:"Secondary sale",d:"A founder sells some of their own shares to an investor; the company issues no new shares.",w:"Lets you take some money off the table before an exit, often from Series B in AI. That cash is yours even if the company later fails."},
+{k:["refresh"],t:"Option refresh",d:"A new option (BSPCE) grant to an existing founder or employee, taken from the pool.",w:"VCs often offer it to the CEO at Series B or C when their stake has become small. A lever if the split between you is contentious."},
+{k:["holding rollover","apport-cession"],t:"Holding rollover (apport-cession)",d:"You contribute your shares to a holding company before the sale: capital gains tax is deferred.",w:"Useful for a big exit if you reinvest: the holding must reinvest at least 60% within 2 years. Set it up with a tax advisor before any sale."},
+{k:["floor"],t:"Floor (BSA AIR)",d:"The minimum valuation at which the BSA AIR converts.",w:"Protects founders: if the next round is very low, the investor doesn't convert at a price that crushes you."},
+{k:["Founders' Pie Calculator"],t:"Founders' Pie Calculator",d:"Frank Demmler's method: weight criteria, rate each founder, and derive a split.",w:"It turns a percentage negotiation into a discussion about facts, much easier to settle between co-founders."},
 {k:["SAFE","SAFEs"],t:"SAFE",d:"Contract: the investor pays now and receives shares at the next priced round, at a price capped by the valuation cap.",w:"Your pre-seed will most likely be a SAFE (or a BSA AIR in France). The investor's stake is known at signing: amount ÷ cap.",m:{url:CARTA_SAFE,l:"Carta SAFE data"}},
 {k:["BSA AIR"],t:"BSA AIR",d:"The French equivalent of a SAFE: a warrant that turns into shares at the next fundraise.",w:"What you'll be offered if you raise from French angels or funds. The simulator treats it like a SAFE."},
 {k:["cap table"],t:"Cap table",d:"The table of who owns what percentage of the company.",w:"This is what the whole simulator moves, round after round.",m:{tab:"cap",l:"Open the Over time tab"}},
@@ -760,7 +1081,7 @@ en:[
 const idx=new Map();G.forEach((e,i)=>e.k.forEach(k=>idx.set(k.toLowerCase(),i)));
 const alts=[...idx.keys()].sort((a,b)=>b.length-a.length).map(s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"));
 const RE=new RegExp("(?<![\\p{L}\\p{N}])("+alts.join("|")+")(?![\\p{L}\\p{N}])","giu");
-const SKIP="button,option,select,textarea,input,a,svg,script,style,td,summary,.gl,.glpop,.seg-b,.js-plotly-plot,.kpi .n,.ticks";
+const SKIP="button,option,select,textarea,input,a,svg,script,style,td,summary,h3,.gl,.glpop,.seg-b,.js-plotly-plot,.kpi .n,.ticks,.legend,.pbar,#printSum";
 const ZONES="header,aside details,.split,.card,.panel>p,.panel>h3,.panel>ul,.panel>.tbl";
 
 function scan(){
@@ -777,7 +1098,8 @@ function scan(){
         frag=frag||document.createDocumentFragment();frag.append(s.slice(last,m.index));
         const sp=document.createElement("span");sp.className="gl";sp.dataset.g=i;sp.tabIndex=0;sp.setAttribute("role","button");
         sp.setAttribute("aria-haspopup","dialog");sp.setAttribute("aria-expanded","false");sp.textContent=m[1];frag.append(sp);last=m.index+m[1].length;}
-      if(frag){frag.append(s.slice(last));n.replaceWith(frag);}
+      if(frag){frag.append(s.slice(last));const p=n.parentElement;
+        if(p&&/flex/.test(getComputedStyle(p).display)){const w=document.createElement("span");w.className="glw-wrap";w.append(frag);n.replaceWith(w);}else n.replaceWith(frag);}
     });
   });
 }
